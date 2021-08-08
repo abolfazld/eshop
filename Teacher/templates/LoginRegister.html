@@ -1,1 +1,285 @@
 {% extends 'Base/BaseTemplate.html' %}
+
+{% block Title %}
+    ورود | ایجاد حساب
+{% endblock %}
+
+{% block Css %}
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        #LoginRegister {
+            background: linear-gradient(120deg, #e659f5, #ffac94);
+        }
+
+        #form {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(230, 89, 245, .5);
+        }
+    </style>
+{% endblock %}
+
+{% block Content %}
+    <body>
+    <div class="row align-items-center align-content-center" id="LoginRegister">
+        <form action="" class="bg-white p-3 col-xl-3 col-lg-5 col-md-6 col-sm-10 mx-auto login" id="form">
+            <div>
+                <ul class="nav bg-white rounded-top">
+                    <li class="nav-item">
+                        <a class="nav-link act" href="#" id="Login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="Register">Register</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="" id="loginForm">
+                <h2 class="text-center fw-normal mb-4 mt-3">Login Form</h2>
+                <div class="mb-1">
+                    <label for="UserNameLogin" class="form-label">User Name</label>
+                    <input type="text" InputLogin TypeInp="UserName" class="form-control rounded-0" id="UserNameLogin"
+                           placeholder="UserName">
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Password</label>
+                    <input type="password" InputLogin TypeInp="Password" class="form-control rounded-0" id="Password"
+                           placeholder="Password">
+                    <a href="" class="text-decoration-none">Forgot Password?</a>
+                </div>
+                <button type="button" class="btn w-100 rounded-0 border-0 mt-3" id="sub-l">Login</button>
+            </div>
+            <div class="d-none" id="registerForm">
+                <h2 class="text-center fw-normal mb-4 mt-3">Register Form</h2>
+                <div class="mb-1">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" InputRegister TypeInp="Email" class="form-control rounded-0" id="emailR"
+                           placeholder="name@example.com">
+                </div>
+                <div class="mb-1">
+                    <label for="Username" class="form-label">Username</label>
+                    <input type="text" InputRegister TypeInp="UserName" class="form-control rounded-0" id="Username"
+                           placeholder="UserName">
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Password</label>
+                    <input type="password" InputRegister TypeInp="Password" class="form-control rounded-0"
+                           id="PasswordR" placeholder="Password">
+                </div>
+                <button class="btn w-100 rounded-0 border-0 mt-3" id="sub-R" type="button">Register</button>
+            </div>
+        </form>
+    </div>
+    </body>
+{% endblock %}
+
+{% block Js %}
+
+    <script>
+        document.querySelector("#Login").addEventListener("click", shoWLoginForm)
+        document.querySelector("#Register").addEventListener("click", shoWRegisterForm)
+
+        function shoWLoginForm(e) {
+            e.preventDefault()
+            document.getElementById("form").classList.add("login")
+            document.getElementById("form").classList.remove("register")
+            document.getElementById("loginForm").classList.remove("d-none")
+            document.getElementById("registerForm").classList.add("d-none")
+            document.getElementById("Login").classList.add("act")
+            document.getElementById("Register").classList.remove("act")
+        }
+
+        function shoWRegisterForm(e) {
+            document.getElementById("form").classList.remove("login")
+            document.getElementById("form").classList.add("register")
+            document.getElementById("loginForm").classList.add("d-none")
+            document.getElementById("registerForm").classList.remove("d-none")
+            document.getElementById("Login").classList.remove("act")
+            document.getElementById("Register").classList.add("act")
+        }
+
+
+        let BtnRegister = document.querySelector('#sub-R')
+        BtnRegister.addEventListener('click', SubmitRegister)
+        let BtnLogin = document.querySelector('#sub-l')
+        BtnLogin.addEventListener('click', SubmitLogin)
+
+        let D_Validation = {
+            'UserName': {
+                'Bigger': 4,
+                'Less': 100,
+                'NoSpace': true,
+                'Type': 'Text'
+            },
+            'Password': {
+                'Bigger': 7,
+                'Less': 100,
+                'NoSpace': true,
+                'Type': 'Text'
+            },
+            'Email': {
+                'Bigger': 4,
+                'Less': 65,
+                'NoSpace': false,
+                'Type': 'Email'
+            }
+        }
+
+
+        function SubmitLogin() {
+            let AllInputLogin = document.querySelectorAll('[InputLogin]')
+            let StateLogin = true
+            for (let Input of AllInputLogin) {
+                let Type = Input.getAttribute('TypeInp')
+                let FieldDic = D_Validation[Type]
+                CheckInputValidations(Input, FieldDic['Bigger'], FieldDic['Less'], 'Input', FieldDic['Type'], FieldDic['NoSpace'])
+                let InputValid = Input.getAttribute('Valid') || 'false'
+                if (InputValid == 'false') {
+                    StateLogin = false
+                }
+            }
+            if (StateLogin) {
+                let UserName = document.querySelector('#UserNameLogin')
+                let Password = document.querySelector('#Password')
+                let Data = {
+                    'UserName': UserName.value, 'Password': Password.value
+                }
+                SendAjax('/t/Login-Register/LoginCheck', Data, 'POST', function (response) {
+                    let Status = response.Status
+                    if (Status == '200') {
+                        ShowNotificationMessage('خوش امدید', 'Success')
+                        SetCookie('QlYSqVS_', response.QlYSqVS_)
+                        SetCookie('YPtIeRC_', response.YPtIeRC_)
+                        setTimeout(function () {
+                            location.href = '/t/Panel'
+                        }, 1000)
+                    } else if (Status == '404') {
+                        ShowNotificationMessage('حسابی یافت نشد', 'Error')
+                    } else if (Status == '204') {
+                        ShowNotificationMessage('لطفا اطلاعات خود را به درستی وارد نمایید', 'Error')
+                    }
+                })
+            }
+        }
+
+
+        function SubmitRegister() {
+
+            let AllInputFormRegister = document.querySelectorAll('[InputRegister]')
+            let StateRegister = true
+            for (let Input of AllInputFormRegister) {
+                let Type = Input.getAttribute('TypeInp')
+                let FieldDic = D_Validation[Type]
+                CheckInputValidations(Input, FieldDic['Bigger'], FieldDic['Less'], 'Input', FieldDic['Type'], FieldDic['NoSpace'])
+                let InputValid = Input.getAttribute('Valid') || 'false'
+                if (InputValid == 'false') {
+                    StateRegister = false
+                }
+            }
+            if (StateRegister) {
+                let Email = document.querySelector('#emailR')
+                let UserName = document.querySelector('#Username')
+                let Password = document.querySelector('#PasswordR')
+                let Data = {
+                    'UserName': UserName.value,
+                    'Email': Email.value,
+                    'Password': Password.value,
+                }
+                SendAjax('/t/Login-Register/RegisterCheck', Data, 'POST', function (response) {
+                    let Status = response.Status
+                    if (Status == '200') {
+                        ShowNotificationMessage('حساب شما با موفقیت ایجاد شد', 'Success')
+                        SetCookie('QlYSqVS_', response.QlYSqVS_)
+                        SetCookie('YPtIeRC_', response.YPtIeRC_)
+                        setTimeout(function () {
+                            location.href = '/t/Panel'
+                        }, 1000)
+                    } else if (Status == '409') {
+                        ShowNotificationMessage('این نام کاربری از قبل وجود دارد', 'Error')
+                    } else if (Status == '204') {
+                        ShowNotificationMessage('لطفا اطلاعات خود را به درستی وارد نمایید', 'Error')
+                    }
+                })
+            }
+        }
+    </script>
+
+
+
+
+
+    {#   <script>#}
+
+    {#        document.querySelector("#sub-l").addEventListener("click", validateLoginForm);#}
+    {#        document.querySelector("#sub-R").addEventListener("click", validateRegisterForm);#}
+    {##}
+    {#        function shoWLoginForm(e) {#}
+    {#            e.preventDefault()#}
+    {#            document.getElementById("form").classList.add("login")#}
+    {#            document.getElementById("form").classList.remove("register")#}
+    {#            document.getElementById("loginForm").classList.remove("d-none")#}
+    {#            document.getElementById("registerForm").classList.add("d-none")#}
+    {#            document.getElementById("Login").classList.add("act")#}
+    {#            document.getElementById("Register").classList.remove("act")#}
+    {#        }#}
+    {##}
+    {#        function shoWRegisterForm(e) {#}
+    {#            document.getElementById("form").classList.remove("login")#}
+    {#            document.getElementById("form").classList.add("register")#}
+    {#            document.getElementById("loginForm").classList.add("d-none")#}
+    {#            document.getElementById("registerForm").classList.remove("d-none")#}
+    {#            document.getElementById("Login").classList.remove("act")#}
+    {#            document.getElementById("Register").classList.add("act")#}
+    {#        }#}
+    {##}
+    {#        function validateLoginForm(e) {#}
+    {#            e.preventDefault()#}
+    {#            //validate password#}
+    {#            if (document.querySelector("#Password").value.length < 5) {#}
+    {#                document.querySelector("#Password").classList.add("is-invalid")#}
+    {#            } else {#}
+    {#                document.querySelector("#Password").classList.remove("is-invalid")#}
+    {#                document.querySelector("#Password").classList.add("is-valid")#}
+    {#            }#}
+    {#            //validate email#}
+    {#            if (document.querySelector("#email").value === "" || document.querySelector("#email").value.indexOf("@") < 0 || document.querySelector("#email").value.indexOf(".") < 0) {#}
+    {#                document.querySelector("#email").classList.add("is-invalid")#}
+    {#            } else {#}
+    {#                document.querySelector("#email").classList.remove("is-invalid")#}
+    {#                document.querySelector("#email").classList.add("is-valid")#}
+    {#            }#}
+    {#        }#}
+    {##}
+    {#        function validateRegisterForm(e) {#}
+    {#            e.preventDefault()#}
+    {#            //validate password#}
+    {#            if (document.querySelector("#PasswordR").value.length < 5) {#}
+    {#                document.querySelector("#PasswordR").classList.add("is-invalid")#}
+    {#            } else {#}
+    {#                document.querySelector("#PasswordR").classList.remove("is-invalid")#}
+    {#                document.querySelector("#PasswordR").classList.add("is-valid")#}
+    {#            }#}
+    {#            //validate password#}
+    {#            if (document.querySelector("#PasswordCR").value.length < 5) {#}
+    {#                document.querySelector("#PasswordCR").classList.add("is-invalid")#}
+    {#            } else {#}
+    {#                document.querySelector("#PasswordCR").classList.remove("is-invalid")#}
+    {#                document.querySelector("#PasswordCR").classList.add("is-valid")#}
+    {#            }#}
+    {#            //validate password#}
+    {#            if (document.querySelector("#Username").value.length < 6) {#}
+    {#                document.querySelector("#Username").classList.add("is-invalid")#}
+    {#            } else {#}
+    {#                document.querySelector("#Username").classList.remove("is-invalid")#}
+    {#                document.querySelector("#Username").classList.add("is-valid")#}
+    {#            }#}
+    {#            //validate email#}
+    {#            if (document.querySelector("#emailR").value === "" || document.querySelector("#emailR").value.indexOf("@") < 0 || document.querySelector("#emailR").value.indexOf(".") < 0) {#}
+    {#                document.querySelector("#emailR").classList.add("is-invalid")#}
+    {#            } else {#}
+    {#                document.querySelector("#emailR").classList.remove("is-invalid")#}
+    {#                document.querySelector("#emailR").classList.add("is-valid")#}
+    {#            }#}
+    {#        }#}
+    {#    </script>#}
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

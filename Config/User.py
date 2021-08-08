@@ -2,14 +2,11 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from MemberGroup.models import MemberGroup
-from User.models import User
 from .Security import Decode , UnDecode
+from Teacher.models import Teacher
 
 MODELS = [
-    {'MODEL':MemberGroup,'UserNameField':'UserName','PasswordField':'Password'},
-    {'MODEL':User,'UserNameField':'UserName','PasswordField':'Password'}
-
+    {'MODEL':Teacher,'UserNameField':'UserName','PasswordField':'Password'}
 ]
 
 
