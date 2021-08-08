@@ -334,8 +334,10 @@ function CheckInputValidations(Input, Bigger, Less, SetIn = 'Input', Type = 'Tex
         if (SetIn == 'Input') {
             if (State == true) {
                 Input.classList.add('InputValid')
+                Input.classList.remove('InputInValid')
             } else {
                 Input.classList.remove('InputValid')
+                Input.classList.add('InputInValid')
             }
         }
     }

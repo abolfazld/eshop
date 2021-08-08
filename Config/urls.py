@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('t',include('Teacher.urls')),# Teacher
     path('' , include('Accounts.urls' , namespace='accounts')), 
+
 ]

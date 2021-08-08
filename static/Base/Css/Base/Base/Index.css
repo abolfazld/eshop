@@ -24,12 +24,12 @@ table {
 
 @font-face {
     font-family: 'B-NasimBold';
-    src: url("/Static/Font/B-NasimBold.woff");
+    src: url("/static/Base/Font/B-NasimBold.woff");
 }
 
 @font-face {
     font-family: 'Terafik';
-    src: url("/Static/Font/Terafik.woff");
+    src: url("/static/Base/Font/Terafik.woff");
 }
 
 /*@font-face {*/
@@ -44,17 +44,17 @@ table {
 
 @font-face {
     font-family: 'KalameBlack';
-    src: url("/Static/Font/Kalameh_Black.woff");
+    src: url("//static/Base/Kalameh_Black.woff");
 }
 
 @font-face {
     font-family: 'MjBeirutMd';
-    src: url("/Static/Font/MjBeirutMd.woff");
+    src: url("/static/Base/Font/MjBeirutMd.woff");
 }
 
 @font-face {
     font-family: 'MjCasablancaHeavy';
-    src: url("/Static/Font/Mj-Casablanca-Heavy.woff");
+    src: url("/static/Base/Font/Mj-Casablanca-Heavy.woff");
 }
 
 /*@font-face {*/
@@ -74,12 +74,12 @@ table {
 
 @font-face {
     font-family: 'IranSens';
-    src: url("/Static/Font/IranSens.woff");
+    src: url("/static/Base/Font/IranSens.woff");
 }
 
 @font-face {
     font-family: 'Vazir';
-    src: url("/Static/Font/Vazir-Regular.woff");
+    src: url("/static/Base/Font/Vazir-Regular.woff");
 }
 
 /*@font-face {*/
@@ -104,7 +104,7 @@ table {
 
 @font-face {
     font-family: 'Yekan';
-    src: url("/Static/Font/Yekan.woff");
+    src: url("/static/Base/Font/Yekan.woff");
 }
 
 /*@font-face {*/
@@ -177,7 +177,7 @@ html, body {
 }
 
 
-.ContainerTitle p{
+.ContainerTitle p {
     font-family: 'KalameBlack';
 }
 
@@ -638,6 +638,12 @@ input[type=number] {
     border-radius: 4px;
 }
 
+.InputInValid {
+    border: 1px solid #ff3357 !important;
+    box-shadow: none !important;
+    border-radius: 4px;
+}
+
 .Label {
     font-size: 80%;
     color: #666666;
@@ -917,7 +923,7 @@ button:focus {
     transition: margin .2s;
     background: none;
     font-size: 150%;
-    color: rgba(81,81,81,0.70);
+    color: rgba(81, 81, 81, 0.70);
 }
 
 .Sliders .BtnNextSlider {
@@ -928,8 +934,9 @@ button:focus {
     transition: margin .2s;
     background: none;
     font-size: 150%;
-    color: rgba(81,81,81,0.70);
+    color: rgba(81, 81, 81, 0.70);
 }
+
 .Sliders button:focus {
     outline: none;
 }
@@ -940,12 +947,12 @@ button:focus {
 
 .BtnPrevSlider:hover {
     margin-left: 4px;
-    color: rgba(81,81,81,1);
+    color: rgba(81, 81, 81, 1);
 }
 
 .BtnNextSlider:hover {
     margin-right: 4px;
-    color: rgba(81,81,81,1);
+    color: rgba(81, 81, 81, 1);
 }
 
 .SliderActive {
