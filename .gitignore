@@ -1,7 +1,7 @@
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,django,pycharm,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,django,pycharm,visualstudiocode
-
+*.idea/
 ### Django ###
 *.log
 *.pot
