@@ -1,0 +1,154 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>Login or Register</title>
+</head>
+
+<body>
+  <div class="row align-items-center align-content-center" id="LoginRegister">
+    <div action="" class="bg-white p-3 col-xl-3 col-lg-5 col-md-6 col-sm-10 mx-auto login" id="form">
+      <div>
+        <ul class="nav bg-white rounded-top">
+          <li class="nav-item">
+            <a class="nav-link act" href="#" id="Login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="Register">Register</a>
+          </li>
+        </ul>
+      </div>
+      <div class="" id="loginForm">
+        <h2 class="text-center fw-normal mb-4 mt-3">Login Form</h2>
+        <form action="{% url 'accounts:login' %}" method="POST">
+          {% csrf_token %}
+          <div class="mb-1">
+            <label for="email" name='email' class="form-label">Email address</label>
+            <input type="email" name='email' class="form-control rounded-0"  placeholder="name@example.com">
+          </div>
+          <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <input type="password" name='password' class="form-control rounded-0" " placeholder="Password">
+            <a href="" class="text-decoration-none">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn btn-success w-100 rounded-0 border-0 mt-3" id="sub-l">Login</button>
+        </form>
+      </div>
+      <div class="d-none" id="registerForm">
+        <h2 class="text-center fw-normal mb-4 mt-3">Register Form</h2>
+        <form action="{% url 'accounts:register' %}" method="POST">
+          {% csrf_token %}
+          <div class="mb-1">
+            <!-- TODO : INPUTS STYLES ARE NOT WORING  -->
+            <label for="email" class="form-label">Email address</label> 
+            <!-- <input type="email" name='email' class="form-control rounded-0" id="emailR" placeholder="name@example.com"> -->
+            {{ register_form.email|add_class:'form-control rounded-0' }}
+          </div>
+          <div class="mb-1">
+            <label for="Username" class="form-label">Username</label>
+            <!-- <input type="text" name='username' class="form-control rounded-0" id="Username" placeholder="name@example.com"> -->
+            {{ register_form.username|add_class:'form-control rounded-0' }}
+          </div>
+          <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <!-- <input type="password" name='password' class="form-control rounded-0" id="PasswordR" placeholder="Password"> -->
+            {{ register_form.password|add_class:'form-control rounded-0' }}
+          </div>
+          <div class="mb-3">
+            <label for="Password" class="form-label">Confirm password</label>
+            <!-- <input type="password" name='confirmpassword' class="form-control rounded-0" id="PasswordCR" placeholder="Password"> -->
+            {{ register_form.confirm_password|add_class:'form-control rounded-0' }}
+
+          </div>
+          <button type="submit" class="btn btn-primary w-100 rounded-0 border-0 mt-3"">Register</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    document.querySelector("#Login").addEventListener("click", shoWLoginForm)
+    document.querySelector("#Register").addEventListener("click", shoWRegisterForm)
+
+
+    function shoWLoginForm(e) {
+      e.preventDefault()
+      document.getElementById("form").classList.add("login")
+      document.getElementById("form").classList.remove("register")
+      document.getElementById("loginForm").classList.remove("d-none")
+      document.getElementById("registerForm").classList.add("d-none")
+      document.getElementById("Login").classList.add("act")
+      document.getElementById("Register").classList.remove("act")
+    }
+
+    function shoWRegisterForm(e) {
+      document.getElementById("form").classList.remove("login")
+      document.getElementById("form").classList.add("register")
+      document.getElementById("loginForm").classList.add("d-none")
+      document.getElementById("registerForm").classList.remove("d-none")
+      document.getElementById("Login").classList.remove("act")
+      document.getElementById("Register").classList.add("act")
+    }
+    // TODO : THESE FUNCTIONS NOT WORKING
+
+    // function validateLoginForm(e) {
+    //   e.preventDefault()
+    //   //validate password
+    //   if (document.querySelector("#Password").value.length < 5) {
+    //     document.querySelector("#Password").classList.add("is-invalid")
+    //   } else {
+    //     document.querySelector("#Password").classList.remove("is-invalid")
+    //     document.querySelector("#Password").classList.add("is-valid")
+    //   }
+    //   //validate email
+    //   if (document.querySelector("#email").value === "" || document.querySelector("#email").value.indexOf("@") < 0 || document.querySelector("#email").value.indexOf(".") < 0) {
+    //     document.querySelector("#email").classList.add("is-invalid")
+    //   } else {
+    //     document.querySelector("#email").classList.remove("is-invalid")
+    //     document.querySelector("#email").classList.add("is-valid")
+    //   }
+    // }
+
+    // function validateRegisterForm(e) {
+    //   e.preventDefault()
+    //   //validate password
+    //   if (document.querySelector("#PasswordR").value.length < 5) {
+    //     document.querySelector("#PasswordR").classList.add("is-invalid")
+    //   } else {
+    //     document.querySelector("#PasswordR").classList.remove("is-invalid")
+    //     document.querySelector("#PasswordR").classList.add("is-valid")
+    //   }
+    //   //validate password
+    //   if (document.querySelector("#PasswordCR").value.length < 5) {
+    //     document.querySelector("#PasswordCR").classList.add("is-invalid")
+    //   } else {
+    //     document.querySelector("#PasswordCR").classList.remove("is-invalid")
+    //     document.querySelector("#PasswordCR").classList.add("is-valid")
+    //   }
+    //   //validate password
+    //   if (document.querySelector("#Username").value.length < 6) {
+    //     document.querySelector("#Username").classList.add("is-invalid")
+    //   } else {
+    //     document.querySelector("#Username").classList.remove("is-invalid")
+    //     document.querySelector("#Username").classList.add("is-valid")
+    //   }
+    //   //validate email
+    //   if (document.querySelector("#emailR").value === "" || document.querySelector("#emailR").value.indexOf("@") < 0 || document.querySelector("#emailR").value.indexOf(".") < 0) {
+    //     document.querySelector("#emailR").classList.add("is-invalid")
+    //   } else {
+    //     document.querySelector("#emailR").classList.remove("is-invalid")
+    //     document.querySelector("#emailR").classList.add("is-valid")
+    //   }
+    // }
+  </script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>
