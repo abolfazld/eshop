@@ -1,6 +1,6 @@
 from django import forms
 from .models import User
-
+from django.contrib.auth import authenticate , login
 class RegisterForm(forms.Form):
     username = forms.CharField()
     email= forms.EmailField()
@@ -46,3 +46,15 @@ class RegisterForm(forms.Form):
         user.set_password(password)
 
         user.save()
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(label='Email')
+    password = forms.CharField(label='Password' , widget=forms.PasswordInput())
+
+    def login_user(self , request): 
+        data = self.cleaned_data
+        user = authenticate(request , username= data.get('email') , password=data.get('password'))
+        if user:
+            login(request , user)
+            return user
+        return None

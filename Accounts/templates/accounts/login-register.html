@@ -30,12 +30,14 @@
         <form action="{% url 'accounts:login' %}" method="POST">
           {% csrf_token %}
           <div class="mb-1">
-            <label for="email" name='email' class="form-label">Email address</label>
-            <input type="email" name='email' class="form-control rounded-0"  placeholder="name@example.com">
+            <label for="{{ login_form.email.id_for_label }}" name='email' class="form-label">Email address</label>
+            <!-- <input type="email" name='email' class="form-control rounded-0"  placeholder="name@example.com"> -->
+            {{ login_form.email|add_class:"form-control rounded-0" }}
           </div>
           <div class="mb-3">
-            <label for="Password" class="form-label">Password</label>
-            <input type="password" name='password' class="form-control rounded-0" " placeholder="Password">
+            <label for="{{login_form.password.id_for_label}}" class="form-label">Password</label>
+            <!-- <input type="password" name='password' class="form-control rounded-0" " placeholder="Password"> -->
+            {{ login_form.password|add_class:"form-control rounded-0" }}
             <a href="" class="text-decoration-none">Forgot Password?</a>
           </div>
           <button type="submit" class="btn btn-success w-100 rounded-0 border-0 mt-3" id="sub-l">Login</button>

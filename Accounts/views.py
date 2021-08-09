@@ -1,15 +1,17 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth import  logout
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm , LoginForm
 
 
 def LoginRegister(request): # TODO:BETTER NAME FOR THIS FUNC
     if request.user.is_authenticated:
         return redirect('/')
-    form = RegisterForm()
+    register_form = RegisterForm()
+    login_form = LoginForm()
     context = {
-        'register_form' : form,
+        'register_form' : register_form,
+        'login_form' : login_form,
     }
     if request.user.is_authenticated:
         print('You are login in already')
@@ -19,13 +21,13 @@ def LoginRegister(request): # TODO:BETTER NAME FOR THIS FUNC
 
 def LoginView(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(request , username=email , password=password) # we should pass email for login
-        if user is not None:
-            login(request,user)
-            messages.success(request,'You are successfully logged in !!')
-            return redirect('/')
+        form = LoginForm(request.POST or None) # we should pass email for login
+        if form.is_valid():
+            user = form.login_user(request)
+            if user:
+                messages.success(request,'You are successfully logged in !!')
+                return redirect('/')
+            messages.error(request , 'Email / password is incorrect')
     return redirect('accounts:auth')
 
 def LogoutView(request):
