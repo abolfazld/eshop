@@ -97,8 +97,8 @@ def UnDecode(PasswordDecode):
 
 """
 
-UserName : QlYSqVS_
-Password : YPtIeRC_
+UserName : QlYSqVS
+Password : YPtIeRC
 
 """
 
