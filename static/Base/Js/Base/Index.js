@@ -17,8 +17,8 @@ function CreateMessage_Alert(Text, FuncWhenOK, ValueFunc = null, FuncWhenCancel 
         BtnClose1.className = 'fa fa-times BtnClose1_Alert'
 
         TextMessage.innerHTML = Text
-        BtnClose.innerText = 'بازگشت'
-        BtnOk.innerText = 'بله'
+        BtnClose.innerText = 'Cancel'
+        BtnOk.innerText = 'Yes'
 
         BtnClose.onclick = function () {
             if (FuncWhenCancel != null) {
@@ -636,7 +636,7 @@ function OpenFullscreen(elem) {
 
 //////////////////////////////////       Sign Out Account   ////////////////////////////////////////////
 function SignOutAccount(Path = '/') {
-    CreateMessage_Alert('ایا مطمعن هستید که میخواهید از حساب کاربری خارج شوید ؟', function () {
+    CreateMessage_Alert('Are you Sure you want sign out ?', function () {
         SetCookie('QlYSqVS', 'None*_', '0', Path)
         SetCookie('YPtIeRC', 'None*_', '0', Path)
         location.reload()
@@ -935,7 +935,7 @@ for (let i of AllCheckInputVal) {
     let TypeVal = i.getAttribute('TypeVal') || 'Text'
     let SetIn = i.getAttribute('SetIn') || 'Input'
     if (TypeVal == 'File') {
-        ValidationFile(i)
+        ValidationFile(i,SetIn)
     } else {
         CheckInputValidations(i, Bigger, Less, SetIn, TypeVal)
     }
@@ -959,25 +959,36 @@ function ValidationIsNumber(Text) {
 }
 
 
-function ValidationFile(Input) {
+function ValidationFile(Input, SetIn = 'Input') {
     let State = false
     let Value = Input.value
     let StateInputFile = Input.getAttribute('State')
     if (StateInputFile == 'MostGet') {
         if (Value != '' && Value != ' ' && !IsBlank(Value)) {
             State = true
-            Input.classList.add('InputValid')
         } else {
             State = false
-            Input.classList.remove('InputValid')
-            ImageFormInfo.src = ''
         }
-        Input.setAttribute('Valid', State)
-    } else {
-        Input.classList.add('InputValid')
-        Input.setAttribute('Valid', 'true')
     }
 
+    if (State == true || StateInputFile != 'MostGet') {
+        if (SetIn == 'Input') {
+            Input.classList.add('InputValid')
+        } else if (SetIn == 'Icon') {
+            let Icon = Input.parentNode.querySelector('i')
+            Icon.className = 'far fa-check-circle'
+        }
+        State = true
+    } else {
+        if (SetIn == 'Input') {
+            Input.classList.remove('InputValid')
+        } else if (SetIn == 'Icon') {
+            let Icon = Input.parentNode.querySelector('i')
+            Icon.className = 'far fa-times-circle'
+        }
+        State = false
+    }
+    Input.setAttribute('Valid', State)
     return State
 }
 

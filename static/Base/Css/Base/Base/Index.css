@@ -44,7 +44,7 @@ table {
 
 @font-face {
     font-family: 'KalameBlack';
-    src: url("//static/Base/Kalameh_Black.woff");
+    src: url("/static/Base/Font/Kalameh_Black.woff");
 }
 
 @font-face {
@@ -125,7 +125,7 @@ table {
 
 body {
     background: #e7e7e7;
-    direction: rtl;
+    direction: ltr;
     text-align: right;
 }
 
