@@ -16,6 +16,20 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(230, 89, 245, .5);
         }
+
+        #sub-l {
+            background: #3bde9b;
+            padding: 7px;
+            border-radius: 4px !important;
+            color: white;
+        }
+
+        #sub-R {
+            background: #5eaeff;
+            padding: 7px;
+            border-radius: 4px !important;
+            color: white;
+        }
     </style>
 {% endblock %}
 
@@ -146,16 +160,16 @@
                 SendAjax('/t/Login-Register/LoginCheck', Data, 'POST', function (response) {
                     let Status = response.Status
                     if (Status == '200') {
-                        ShowNotificationMessage('خوش امدید', 'Success')
-                        SetCookie('QlYSqVS_', response.QlYSqVS_)
-                        SetCookie('YPtIeRC_', response.YPtIeRC_)
+                        ShowNotificationMessage('Welcome', 'Success')
+                        SetCookie('QlYSqVS', response.QlYSqVS)
+                        SetCookie('YPtIeRC', response.YPtIeRC)
                         setTimeout(function () {
                             location.href = '/t/Panel'
                         }, 1000)
                     } else if (Status == '404') {
-                        ShowNotificationMessage('حسابی یافت نشد', 'Error')
+                        ShowNotificationMessage('No account found', 'Error')
                     } else if (Status == '204') {
-                        ShowNotificationMessage('لطفا اطلاعات خود را به درستی وارد نمایید', 'Error')
+                        ShowNotificationMessage('Please enter the information correctly', 'Error')
                     }
                 })
             }
@@ -187,16 +201,16 @@
                 SendAjax('/t/Login-Register/RegisterCheck', Data, 'POST', function (response) {
                     let Status = response.Status
                     if (Status == '200') {
-                        ShowNotificationMessage('حساب شما با موفقیت ایجاد شد', 'Success')
+                        ShowNotificationMessage('Your account is Created', 'Success')
                         SetCookie('QlYSqVS_', response.QlYSqVS_)
                         SetCookie('YPtIeRC_', response.YPtIeRC_)
                         setTimeout(function () {
                             location.href = '/t/Panel'
                         }, 1000)
                     } else if (Status == '409') {
-                        ShowNotificationMessage('این نام کاربری از قبل وجود دارد', 'Error')
+                        ShowNotificationMessage('This username already exists', 'Error')
                     } else if (Status == '204') {
-                        ShowNotificationMessage('لطفا اطلاعات خود را به درستی وارد نمایید', 'Error')
+                        ShowNotificationMessage('Please enter the information correctly', 'Error')
                     }
                 })
             }

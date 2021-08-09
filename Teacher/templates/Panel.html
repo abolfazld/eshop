@@ -1,0 +1,411 @@
+{% extends 'Base/BaseTemplate.html' %}
+{% load FilterTags %}
+{% block Title %}
+
+{% endblock %}
+
+{% block Css %}
+    <style>
+        [src='__None__'] {
+            display: none !important;
+        }
+
+        .ContainerTitle {
+            text-align: left;
+            border-left: 4px solid #2c7df6;
+            padding: 5px;
+            padding-left: 10px;
+
+        }
+
+        .ContainerTitle p {
+            font-size: 140%;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .ContainerBase {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ContainerAsideMenu {
+            background: #f4d3f7;
+            min-height: 100vh;
+            height: 100%;
+            width: 10%;
+            display: inline-block;
+            position: relative;
+        }
+
+        .ContainerContent {
+            width: 90%;
+            background: #F9F9F9;
+            height: 100vh;
+            display: inline-block;
+        }
+
+        .Container {
+            background: white;
+            width: 98%;
+            margin: 10px auto;
+            animation: AnimationTopToBottom .8s forwards;
+        }
+
+        .ContainerIsHide {
+            display: none;
+        }
+
+        .ContainerAsideInfo {
+            background: #d890fc;
+            box-shadow: 0 5px 10px rgba(206, 114, 252, 0.3);
+            padding: 3px;
+        }
+
+        .ContainerAsideInfo > div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ContainerAsideInfo > div:first-of-type {
+            cursor: pointer;
+            color: white;
+            padding-bottom: 7px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .NameAndFamilyTeacherAside {
+            margin: 0;
+        }
+
+        .ImageTeacherProfileAside {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .ContainerMainAside {
+            margin-top: 40px;
+        }
+
+        .ContainerButtonAside div {
+            cursor: pointer;
+            padding: 20px 5px;
+            display: flex;
+            justify-content: space-between;
+            color: #6e6e6e;
+            transition: all .15s;
+            font-size: 95%;
+        }
+
+        .ContainerButtonAside div:hover {
+            background: white;
+            color: black;
+        }
+
+        .ContainerButtonAside div:hover i {
+            color: #bb43f6;
+            font-weight: bold;
+        }
+
+        .ContainerButtonAside div p {
+            display: inline-block;
+        }
+
+        .ContainerButtonAside div i {
+            font-size: 120%;
+            padding-top: 2px;
+        }
+
+        .Courses {
+            margin-top: 10px;
+        }
+
+
+        /* Information  */
+
+
+        #FormInformation {
+            margin: auto;
+            margin-top: 30px;
+            text-align: left;
+            width: 65%;
+        }
+
+        .ItemForm {
+            margin: 7px 0;
+        }
+
+        .LabelInput {
+            margin: 0;
+            margin-left: 10px;
+            font-size: 100%;
+        }
+
+        .ItemFormInput i {
+            text-align: right;
+        }
+
+        .ContainerImageFormInformation {
+            direction: rtl;
+            margin: 10px auto;
+            width: 80%;
+        }
+
+        #ImageInformation {
+            width: 200px;
+            height: 200px;
+            display: block;
+            border-radius: 10px;
+            border: 1px solid #eeeeee;
+        }
+
+        .ContainerButtonForm {
+            margin: 100px 0;
+            text-align: left;
+        }
+
+
+    </style>
+{% endblock %}
+{% block Content %}
+    <div class="ContainerBase">
+        <div class="ContainerAsideMenu">
+            <div class="ContainerAsideInfo">
+                <div>
+                    <p class="NameAndFamilyTeacherAside">
+                        {{ Teacher.GetNameAndFamily|truncatechars:20 }}
+                    </p>
+                    {% if Teacher.Image != '' %}
+                        <img src="{{ Teacher.Image.url }}" alt="{{ Teacher.GetNameAndFamily }}"
+                             class="ImageTeacherProfileAside">
+                    {% else %}
+                        <img src="/static/image/ImageDefault/avatar-3.jpg" alt="{{ Teacher.GetNameAndFamily }}"
+                             class="ImageTeacherProfileAside">
+                    {% endif %}
+                </div>
+                <div>
+                    <div title="Active courses">
+                        <i class="far fa-file-video"></i>
+                        <strong>2</strong>
+                    </div>
+                    <div title="Courses completed">
+                        <strong>2</strong>
+                        <i class="far fa-file-certificate"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="ContainerMainAside">
+                <div class="ContainerButtonAside">
+                    <div BtnAsideMenu ContainerLink="ActiveCourse">
+                        <p>Active courses</p>
+                        <i class="far fa-file-video"></i>
+                    </div>
+                    <div BtnAsideMenu ContainerLink="CompletedCourse">
+                        <p>Completed courses</p>
+                        <i class="far fa-file-certificate"></i>
+                    </div>
+                    <div BtnAsideMenu ContainerLink="SubmitCourse">
+                        <p>Submit course</p>
+                        <i class="far fa-file-plus"></i>
+                    </div>
+                    <div BtnAsideMenu ContainerLink="Information">
+                        <p>Information</p>
+                        <i class="far fa-info"></i>
+                    </div>
+                    <div ClickFunc="GoToUrl(/)">
+                        <p>Home</p>
+                        <i class="far fa-home"></i>
+                    </div>
+                    <div BtnAsideMenu ClickFunc="SignOutAccount()">
+                        <p>Sign out</p>
+                        <i class="far fa-sign-out-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ContainerContent">
+            <div class="Container" Container ContainerLiked="ActiveCourse">
+                <div class="ContainerTitle">
+                    <p>Active Course</p>
+                </div>
+                <div class="Courses">
+                    <div class="Course">
+                    </div>
+                </div>
+            </div>
+            <div class="Container" Container ContainerLiked="Information">
+                <div class="ContainerTitle">
+                    <p>Information</p>
+                </div>
+                <form action="/t/Panel/SubmitInformation" enctype="multipart/form-data" content="UTF-8" method="post"
+                      id="FormInformation">
+                    {% csrf_token %}
+                    <div class="ItemForm">
+                        <p class="LabelInput">Name and Family</p>
+                        <div class="ItemFormInput">
+                            <input type="text" name="NameAndFamily" InputForm InputFormInfo Bigger="3" Less="200"
+                                   SetIn="Icon" CheckInputVal
+                                   value="{{ Teacher.NameAndFamily|NoneVal:'' }}">
+                            <i class="far fa-times-circle"></i>
+                        </div>
+                    </div>
+                    <div class="ItemForm">
+                        <p class="LabelInput">Email</p>
+                        <div class="ItemFormInput">
+                            <input type="text" name="Email" InputForm InputFormInfo Bigger="3" Less="65" TypeVal="Email"
+                                   SetIn="Icon"
+                                   CheckInputVal value="{{ Teacher.Email|NoneVal:'' }}">
+                            <i class="far fa-times-circle"></i>
+                        </div>
+                    </div>
+                    <div class="ItemForm">
+                        <p class="LabelInput">Phone Number</p>
+                        <div class="ItemFormInput">
+                            <input type="number" name="PhoneNumber" InputForm InputFormInfo Bigger="3" Less="20"
+                                   TypeVal="Number"
+                                   SetIn="Icon" CheckInputVal value="{{ Teacher.PhoneNumber|NoneVal:'' }}">
+                            <i class="far fa-times-circle"></i>
+                        </div>
+                    </div>
+                    <div class="ItemForm">
+                        <p class="LabelInput">About Me</p>
+                        <div class="ItemFormInput">
+                            <textarea type="text" rows="5" name="AboutMe" InputForm InputFormInfo Bigger="2" Less="5000"
+                                      TypeVal="Text"
+                                      SetIn="Icon" CheckInputVal>{{ Teacher.AboutMe|NoneVal:'' }}</textarea>
+                            <i class="far fa-times-circle"></i>
+                        </div>
+                    </div>
+                    {% if Teacher.Image != '' %}
+                        <div class="ItemForm">
+                            <p class="LabelInput">Picture</p>
+                            <div class="ItemFormInput">
+                                <input type="file" name="Image" accept="image/png, image/gif, image/jpeg" InputForm
+                                       InputFormInfo TypeVal="File"
+                                       SetIn="Icon" CheckInputVal State="Geted">
+                                <input type="hidden" name="StateImage" value="Geted">
+                                <i class="far fa-times-circle"></i>
+                            </div>
+                        </div>
+                        <div class="ContainerImageFormInformation">
+                            <img src="{{ Teacher.Image.url }}" alt="{{ Teacher.NameAndFamily }}" id="ImageInformation">
+                        </div>
+                    {% else %}
+                        <div class="ItemForm">
+                            <p class="LabelInput">Picture</p>
+                            <div class="ItemFormInput">
+                                <input type="file" name="Image" accept="image/png, image/gif, image/jpeg" InputForm
+                                       InputFormInfo TypeVal="File"
+                                       SetIn="Icon" CheckInputVal State="MostGet">
+                                <input type="hidden" name="StateImage" value="MostGet">
+                                <i class="far fa-times-circle"></i>
+                            </div>
+                        </div>
+                        <div class="ContainerImageFormInformation">
+                            <img src="__None__" alt="Picture" id="ImageInformation">
+                        </div>
+                    {% endif %}
+
+                    <div class="ContainerButtonForm">
+                        <button id="BtnSubmitInformation" type="button" class="BtnStyle_5 Disabled">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block Js %}
+    <script>
+        GetCookieFunctionality_ShowNotification()
+        let AllBtnAsideMenu = document.querySelectorAll('[BtnAsideMenu]')
+        for (let Btn of AllBtnAsideMenu) {
+            Btn.addEventListener('click', function (e) {
+                let Icon = e.currentTarget
+                ShowContainer(Icon)
+            })
+        }
+
+
+        function ShowContainer(Icon) {
+            let AllContainer = document.querySelectorAll('[Container]')
+            for (let Container of AllContainer) {
+                Container.classList.add('ContainerIsHide')
+            }
+            let Element = document.querySelector(`[ContainerLiked=${Icon.getAttribute('ContainerLink')}]`)
+            Element.classList.remove('ContainerIsHide')
+        }
+
+
+        let FuncSetActiveContainer = ShowContainer
+        let AttrSearchContainer = 'ContainerLink'
+        let ValAttrContainerDefault = 'ActiveCourse'
+        let UrlContainer = window.location.href
+        let ValueForItemMenu = UrlContainer.split('?')[1]
+        if (ValueForItemMenu != undefined && ValueForItemMenu != '' && ValueForItemMenu != ' ') {
+            let ItemsInMenuForURL = document.querySelector(`[${AttrSearchContainer}=${ValueForItemMenu}]`)
+            if (ValueForItemMenu == 'Home') {
+                GoToUrl('/')
+            }
+            if (ItemsInMenuForURL != null) {
+                FuncSetActiveContainer(ItemsInMenuForURL)
+            }
+        } else {
+            let ItemsInMenuForURL = document.querySelector(`[${AttrSearchContainer}=${ValAttrContainerDefault}]`)
+            FuncSetActiveContainer(ItemsInMenuForURL)
+        }
+
+
+        let AllInputFormInfo = document.querySelectorAll('[InputFormInfo]')
+        for (let Input of AllInputFormInfo) {
+            let TypeInput = Input.type
+            if (TypeInput != 'file') {
+                Input.addEventListener('input', function (e) {
+                    let Input = e.currentTarget
+                    let Bigger = Input.getAttribute('Bigger')
+                    let Less = Input.getAttribute('Less')
+                    let TypeVal = Input.getAttribute('TypeVal') || 'Text'
+                    CheckInputValidations(Input, Bigger, Less, 'Icon', TypeVal)
+                    CheckingStateBtnSubmitInfo()
+                })
+            } else {
+                Input.addEventListener('change', function (e) {
+                    let ImageTag = document.querySelector('#ImageInformation')
+                    let Input = e.currentTarget
+                    Input.parentNode.querySelector('[name="StateImage"]').value = 'MostGet'
+                    Input.setAttribute('State', 'MostGet')
+                    ValidationFile(Input, 'Icon')
+                    let State = Input.getAttribute('Valid') || 'false'
+                    if (State == 'true') {
+                        const [Image] = Input.files
+                        if (Image) {
+                            ImageTag.src = URL.createObjectURL(Image)
+                        }
+                    } else {
+                        ImageTag.src = '__None__'
+                    }
+                    CheckingStateBtnSubmitInfo()
+                })
+            }
+        }
+
+        function CheckingStateBtnSubmitInfo() {
+            let AllInputFormInfo = document.querySelectorAll('[InputFormInfo]')
+            let BtnSubmit = document.querySelector('#BtnSubmitInformation')
+            BtnSubmit.classList.remove('Disabled')
+            BtnSubmit.type = 'submit'
+            for (let Input of AllInputFormInfo) {
+                let Valid = Input.getAttribute('Valid') || 'false'
+                if (Valid == 'false') {
+                    BtnSubmit.classList.add('Disabled')
+                    BtnSubmit.type = 'button'
+                }
+            }
+        }
+
+
+    </script>
+{% endblock %}
