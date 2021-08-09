@@ -11,8 +11,6 @@ MODELS = [
 
 
 
-
-
 def GetUser(request, MODEL, UserNameField, PasswordField, TypeReturn='Object', URL='No',**kwargs):
     Context = {}
     UserState = None
