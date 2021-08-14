@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('t/',include('Teacher.urls')),# Teacher
     path('' , include('Accounts.urls' , namespace='accounts')), 
+    path('' , include('Course.urls')), 
 ]
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

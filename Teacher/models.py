@@ -2,8 +2,9 @@ from django.db import models
 from Config.Security import Decode , UnDecode
 
 
-def UploadTo(instance,path):
-    return f'ImageTeacher/{instance.id}/Image{path}'
+def UploadTo(instance,filepath):
+    filepath = filepath.split('.')[-1]
+    return f'TeachersImages/{instance.id}-{instance.NameAndFamily}.{filepath}'
 
 
 class Teacher(models.Model):
