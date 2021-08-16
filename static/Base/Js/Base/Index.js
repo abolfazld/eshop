@@ -199,7 +199,7 @@ function ClearEffectOnBody() {
 }
 
 
-function SendAjax(Url, Data, Method = 'POST', Success, Failed) {
+function SendAjax(Url, Data = {}, Method = 'POST', Success, Failed) {
 
     function __Redirect__(response) {
         if (response.__Redirect__ == 'True') {
@@ -314,11 +314,11 @@ function CheckInputValidations(Input, Bigger, Less, SetIn = 'Input', Type = 'Tex
 
     if (SetIn != 'None') {
         if (SetIn == 'Container') {
-            Input = Input.parentNode
+            let Container = Input.parentNode
             if (State == true) {
-                Input.classList.add('InputValid')
+                Container.classList.add('InputValid')
             } else {
-                Input.classList.remove('InputValid')
+                Container.classList.remove('InputValid')
             }
         }
         if (SetIn == 'Icon') {
@@ -367,7 +367,7 @@ window.onscroll = function () {
 
 //////////////////////////////////                Functionality Cookie         ///////////////////////////////////////////////
 
-function SetCookieFunctionality_ShowNotification(Text, Type, Timer, LevelOfNecessity) {
+function SetCookieFunctionality_ShowNotification(Text, Type, Timer=5000, LevelOfNecessity=2) {
     document.cookie = `Functionality_N=${Text}~${Type}~${Timer}~${LevelOfNecessity};path=/`
 }
 
@@ -538,7 +538,7 @@ for (let Element of AllTitle_) {
 }
 
 ////////////////////////////////      Create Container Blur   /////////////////////////////////////////////
-function CreateContainerBlur(Top = 'Default', Class = null, Style = null) {
+function CreateContainerBlur(Top = 'Default', Class = null, Style = null, Size = 'Medium') {
     DeleteContainerBlur()
     let Container = document.createElement('div')
     let Container2 = document.createElement('div')
@@ -546,6 +546,8 @@ function CreateContainerBlur(Top = 'Default', Class = null, Style = null) {
     // IconClose.onclick = DeleteContainerBlur
     // IconClose.setAttribute('id','ContainerBlurIconClose')
     // IconClose.className = 'fa fa-times ContainerBlurIconClose'
+    Container.setAttribute('ContainerBlur','')
+    Container.setAttribute('Size', Size)
     Container.className = 'ContainerBlur'
     Container2.className = 'ContainerContentBlur'
     Class != null ? Container.classList.add(Class) : ''
@@ -555,14 +557,14 @@ function CreateContainerBlur(Top = 'Default', Class = null, Style = null) {
     Container.appendChild(Container2)
     document.body.insertBefore(Container, document.body.firstElementChild)
     document.body.classList.add('BlurAllElementsExceptContainerBlur')
+    ScrollOnElement(null, Container)
     return Container2
 }
 
 function DeleteContainerBlur() {
-    let AllContainer = document.querySelectorAll('.ContainerBlur')
-    for (let i of AllContainer) {
-        i.remove()
-    }
+    try {
+        document.querySelector('[ContainerBlur]').remove()
+    }catch (e) {}
     document.body.classList.remove('BlurAllElementsExceptContainerBlur')
 }
 
@@ -935,7 +937,7 @@ for (let i of AllCheckInputVal) {
     let TypeVal = i.getAttribute('TypeVal') || 'Text'
     let SetIn = i.getAttribute('SetIn') || 'Input'
     if (TypeVal == 'File') {
-        ValidationFile(i,SetIn)
+        ValidationFile(i, SetIn)
     } else {
         CheckInputValidations(i, Bigger, Less, SetIn, TypeVal)
     }
@@ -971,12 +973,15 @@ function ValidationFile(Input, SetIn = 'Input') {
         }
     }
 
+
     if (State == true || StateInputFile != 'MostGet') {
         if (SetIn == 'Input') {
             Input.classList.add('InputValid')
         } else if (SetIn == 'Icon') {
             let Icon = Input.parentNode.querySelector('i')
             Icon.className = 'far fa-check-circle'
+        } else if (SetIn == 'Container') {
+            Input.parentNode.classList.add('InputValid')
         }
         State = true
     } else {
@@ -985,6 +990,8 @@ function ValidationFile(Input, SetIn = 'Input') {
         } else if (SetIn == 'Icon') {
             let Icon = Input.parentNode.querySelector('i')
             Icon.className = 'far fa-times-circle'
+        } else if (SetIn == 'Container') {
+            Input.parentNode.classList.remove('InputValid')
         }
         State = false
     }
@@ -1098,3 +1105,66 @@ function SignOutAccountMenu() {
     SignOutAccount()
 }
 
+
+let AllInputForm = document.querySelectorAll('[InputForm]')
+for (let Input of AllInputForm) {
+    let TypeInput = Input.type
+    if (TypeInput != 'file') {
+        Input.addEventListener('input', function (e) {
+            let Input = e.currentTarget
+            let Bigger = Input.getAttribute('Bigger')
+            let Less = Input.getAttribute('Less')
+            let TypeVal = Input.getAttribute('TypeVal') || 'Text'
+            let SetIn = Input.getAttribute('SetIn') || 'Icon'
+            CheckInputValidations(Input, Bigger, Less, SetIn, TypeVal)
+        })
+    } else {
+        Input.addEventListener('change', function (e) {
+            let Input = e.currentTarget
+            let SetIn = Input.getAttribute('SetIn') || 'Icon'
+            ValidationFile(Input, SetIn)
+            let IdImageTag = Input.getAttribute('IdImageTag')
+            let ImageTag = document.querySelector(`#${IdImageTag}`)
+            let State = Input.getAttribute('Valid') || 'false'
+            if (ImageTag != null) {
+                Input.parentNode.querySelector('[name="StateImage"]').value = 'MostGet'
+                Input.setAttribute('State', 'MostGet')
+                if (State == 'true') {
+                    const [Image] = Input.files
+                    if (Image) {
+                        ImageTag.src = URL.createObjectURL(Image)
+                    }
+                } else {
+                    ImageTag.src = '__None__'
+                }
+            }
+        })
+    }
+}
+
+
+
+let TagsWithTimer = document.querySelectorAll('[TimerCounterDown]')
+for (let T of TagsWithTimer){
+    let ToDate = T.getAttribute('ToDateTimer')
+    TimerCountDown(T,ToDate)
+}
+function TimerCountDown(Element, ToDate) {
+    //Jan 5, 2021 15:37:25
+    console.log(ToDate)
+    let countDownDate = new Date(ToDate);
+    let x = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = countDownDate - now;
+        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        let Res = `${days}:${hours}:${minutes}`;
+        Element.innerHTML = Res
+        if (distance < 0) {
+            clearInterval(x);
+            Element.innerHTML = "EXPIRED";
+        }
+    }, 1000);
+}

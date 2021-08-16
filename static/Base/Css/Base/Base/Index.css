@@ -72,10 +72,10 @@ table {
 /*    src: url("/Static/Font/Sade.woff");*/
 /*}*/
 
-@font-face {
-    font-family: 'IranSens';
-    src: url("/static/Base/Font/IranSens.woff");
-}
+/*@font-face {*/
+/*    font-family: 'IranSens';*/
+/*    src: url("/static/Base/Font/IranSens.woff");*/
+/*}*/
 
 @font-face {
     font-family: 'Vazir';
@@ -102,10 +102,10 @@ table {
 /*    src: url("/Static/Font/English/Vollkoren.woff");*/
 /*}*/
 
-@font-face {
-    font-family: 'Yekan';
-    src: url("/static/Base/Font/Yekan.woff");
-}
+/*@font-face {*/
+/*    font-family: 'Yekan';*/
+/*    src: url("/static/Base/Font/Yekan.woff");*/
+/*}*/
 
 /*@font-face {*/
 /*    font-family: 'BZaman';*/
@@ -153,6 +153,17 @@ html, body {
     background: #555;
 }
 
+.Small{
+    font-size: 90%;
+}
+
+.TextDLineThroughBlack{
+    text-decoration: line-through;
+}
+
+.TextDLineThroughRed{
+    text-decoration: 1px line-through red;
+}
 
 .BaseColor {
     background: #17c3b2;
@@ -168,8 +179,8 @@ html, body {
     filter: blur(.5px);
 }
 
-.BlurAllElementsExceptContainerBlur > :not(.ContianerBlur):not(.ContainerBlur *):not(.ContainerBlur) {
-    filter: blur(10px);
+.BlurAllElementsExceptContainerBlur > :not(.NotificationMessage):not(.NotificationMessage *):not(.ContainerBlur):not(.ContainerBlur *):not(.ContainerBlur) {
+    filter: blur(10px) brightness(85%);
 }
 
 .DisabledAllElementsExceptLoadingNotification *:not( .LoadingNotification ):not(.LoadingNotification_Icon):not(.LoadingNotification_Text):not(.NotificationMessage):not(.NotificationMessage *) {
@@ -195,6 +206,11 @@ html, body {
     padding-top: 0;
     padding-bottom: 10px;
     border: 1px solid #e1e1e1;
+}
+
+.ContainerBlur[Size='Small'] {
+    width: 40%;
+    right: 30%;
 }
 
 .ContainerContentBlur {
@@ -269,6 +285,18 @@ input[type=number] {
     direction: rtl;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.ltr {
+    direction: ltr;
+}
+
+.rtl {
+    direction: rtl;
+}
+
 .TitlePriceProductCart {
     color: #aaaaaa !important;
 }
@@ -320,8 +348,7 @@ input[type=number] {
 }
 
 .BtnStyle_5 {
-    border: none;
-    padding: 6px;
+    padding: 7px 12px;
     width: 80px;
     border-radius: 4px;
     box-shadow: -1px -1px 2px #eeeeee, 1px 2px 4px #dddddd, 0 0 20px #dddddd;
@@ -330,7 +357,9 @@ input[type=number] {
     transition: box-shadow .1s, background-color .15s;
     margin: 5px;
     border: 1px solid #21b35a;
+    tab-index: 1;
 }
+
 
 .BtnStyle_5:focus {
     outline: none;
@@ -559,12 +588,44 @@ input[type=number] {
     transform: scale(.9);
 }
 
+.BtnStyleAlert_1_Outline {
+    padding: 6px;
+    width: 80px;
+    border-radius: 4px;
+    box-shadow: -1px -1px 2px #eeeeee, 1px 2px 4px #dddddd;
+    border: 1px solid rgba(247, 84, 73, 0.9);
+    background: none;
+    color: rgba(247, 84, 73, 1);
+    margin: 5px;
+    transition: box-shadow .1s, all .15s;
+}
+
+.BtnStyleAlert_1_Outline:hover {
+    background: rgba(237, 41, 43, 0.9);
+}
+
+.BtnStyleAlert_1_Outline:focus {
+    outline: none;
+}
+
+.BtnStyleAlert_1_Outline:active {
+    box-shadow: none;
+    transform: scale(.9);
+}
+
 .ActiveIconStyle_1 {
     color: #17c3b2 !important;
     background: #fafafa !important;
     box-shadow: none !important;
     border: 1px solid #eeeeee;
     border-radius: 7px;
+}
+
+.BtnStyleNone {
+    border: none;
+    outline: none;
+    background: none;
+    padding: 3px 8px;
 }
 
 .ActiveIconStyle_1 i {
@@ -1005,7 +1066,7 @@ button:focus {
     position: fixed;
     top: 2%;
     right: 2%;
-    z-index: 1000;
+    z-index: 3000;
     background: #ffffff;
     transition: all 1s;
     animation: ShowNotification_Animation_1 .25s;
@@ -1292,10 +1353,12 @@ button:focus {
 
 
 .LabelInput {
-    margin: 0;
+    text-align: left;
+    margin: auto;
     margin-bottom: 2px;
     color: #656565;
     margin-right: 6%;
+    width: 90%;
     font-size: 90%;
 }
 
@@ -1307,6 +1370,7 @@ button:focus {
     border: 1px solid #dddddd;
     /*box-shadow: 0 7px 10px #dddddd, 0 -6px 15px #f0f0f0;*/
     transition: all .2s;
+    text-align: left;
 }
 
 .ItemFormInputFocus {
@@ -1332,11 +1396,28 @@ button:focus {
     background: inherit;
 }
 
+.ItemFormInput select{
+    padding: 4px;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
 .ItemFormInput i {
     text-align: left;
     width: 10%;
     vertical-align: middle;
     font-size: 120%;
+}
+
+.ItemFormInput input::-webkit-outer-spin-button,
+.ItemFormInput input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.ItemFormInput input[type=number] {
+  -moz-appearance: textfield;
 }
 
 
@@ -1472,10 +1553,11 @@ button:focus {
         font-size: 100%;
     }
 
-    .ContainerBlur {
+    .ContainerBlur[Size='Medium'] {
         width: 70%;
         right: 15%;
     }
+
 }
 
 @media screen and (max-width: 1200px) {
@@ -1498,6 +1580,11 @@ button:focus {
 
     .TextMessage_Alert {
         font-size: 90%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 60%;
+        right: 20%;
     }
 
 
@@ -1524,6 +1611,11 @@ button:focus {
         vertical-align: middle;
         font-size: 120%;
     }
+
+    .ContainerBlur[Size='Small'] {
+        width: 65%;
+        right: 17.5%;
+    }
 }
 
 @media screen and (max-width: 550px) {
@@ -1536,9 +1628,14 @@ button:focus {
         font-size: 80%;
     }
 
-    .ContainerBlur {
+    .ContainerBlur[Size='Medium'] {
         width: 85%;
         right: 7.5%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 80%;
+        right: 10%;
     }
 }
 
@@ -1552,9 +1649,14 @@ button:focus {
         font-size: 77%;
     }
 
-    .ContainerBlur {
-        width: 92%;
-        right: 4%;
+    .ContainerBlur[Size='Medium'] {
+        width: 95%;
+        right: 2.5%;
+    }
+
+    .ContainerBlur[Size='Small'] {
+        width: 95%;
+        right: 2.5%;
     }
 
 }
