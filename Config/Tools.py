@@ -54,15 +54,15 @@ def GetDifferenceTime(Time):
     Day = DifferenceTime.days
     Str = ''
     if Minute > 0:
-        Str = f'{Minute} دقیقه پیش'
+        Str = f'{Minute} min ago'
     else:
-        Str = f'لحظاتی پیش'
+        Str = f'now'
 
     if Hour > 0:
-        Str = f'{Hour} ساعت پیش'
+        Str = f'{Hour} hour ago'
 
     if Day > 0:
-        Str = f'{Day}  روز پیش'
+        Str = f'{Day} day ago'
 
     return Str
 
@@ -109,6 +109,7 @@ def ValidationNumber(Number,Bigger=None,Less=None):
     if Number is not None:
         if StateNumber:
             if Bigger is not None and Less is not None:
+                Number = len(Number)
                 if Number > Bigger and Number < Less:
                     return True
                 else:
