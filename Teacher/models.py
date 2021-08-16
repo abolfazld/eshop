@@ -1,5 +1,6 @@
 from django.db import models
 from Config.Security import Decode , UnDecode
+from Course.models import Course
 
 
 def UploadTo(instance,filepath):
@@ -30,4 +31,18 @@ class Teacher(models.Model):
             'YPtIeRC' : Decode(self.Password)
         }
         return D
+
+    def GetAllCourse(self):
+        return Course.objects.filter(Teacher_id=self.id)[::-1]
+
+    def GetCoursesActive(self):
+        return Course.objects.filter(Teacher_id=self.id,StateCourse='Active')[::-1]
+
+    def GetCoursesPause(self):
+        return Course.objects.filter(Teacher_id=self.id,StateCourse='Pause')[::-1]
+
+    def GetCoursesCompleted(self):
+        return Course.objects.filter(Teacher_id=self.id,StateCourse='Completed')[::-1]
+
+
 

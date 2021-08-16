@@ -1,0 +1,1363 @@
+{% extends 'Base/BaseTemplate.html' %}
+{% load FilterTags %}
+{% block Title %}
+    {{ Course.Title }} - {{ Course.Teacher.NameAndFamily }}
+{% endblock %}
+
+{% block Css %}
+    <style>
+        [src="__None__"] {
+            display: none !important;
+        }
+
+        .Label {
+            font-size: 83%;
+            color: #858585;
+            width: 100px;
+        }
+
+        .Course {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            background: #fafafa;
+            box-shadow: 0 10px 15px #dddddd;
+            margin: 10px auto;
+            border-radius: 20px;
+        }
+
+        .SectionVid {
+            padding: 10px;
+            background: white;
+            width: 89%;
+            margin: 40px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #dddddd;
+        }
+
+        .ImageCourseAndEdit {
+            width: 33%;
+        }
+
+        .ImageCourseAndEdit img {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+        }
+
+        .ImageCourseAndEdit * {
+            vertical-align: top;
+        }
+
+        .StateCourse {
+            float: left;
+        }
+
+        .ItemCourse {
+            display: inline-block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 25%;
+            padding: 8px;
+            font-size: 110%;
+        }
+
+        .ItemCourse:hover {
+            font-weight: bold;
+        }
+
+        i[Edit] {
+            background: #ebfffc;
+            border: 1px solid rgba(84, 210, 163, 0.3);
+            color: #54d2a3;
+        }
+
+        i[Trash] {
+            background: #ffeced;
+            border: 1px solid rgba(255, 121, 120, 0.3);
+            color: #ff7978;
+        }
+
+        i[Percent] {
+            padding: 9px;
+            padding-right: 10px;
+            background: #e0f8ff;
+            border: 1px solid rgba(54, 161, 255, 0.3);
+            color: #36a1ff;
+        }
+
+        .InfoCourse {
+            width: 66%;
+        }
+
+        .ContainerTitle {
+            border-left: 4px solid #95dde6;
+            padding-left: 10px;
+            text-align: left;
+        }
+
+        .ContainerTitle p {
+            font-size: 150%;
+        }
+
+        .ContainerItemInfo {
+            margin-top: 30px;
+            margin-left: 40px;
+        }
+
+        .ItemInfo {
+            text-align: left;
+            margin: 15px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #fdedef;
+        }
+
+        .ItemInfo:last-of-type {
+            border: none;
+        }
+
+        .CreateSectionCourse {
+            text-align: right;
+            margin-top: 20px;
+            direction: rtl;
+        }
+
+        .CreateSectionCourse div {
+            cursor: pointer;
+            text-align: center;
+            border-radius: 3px;
+            background: #63dcc3;
+            color: #ffffff;
+            width: 170px;
+            padding: 10px 0;
+            margin-top: 40px;
+            margin-bottom: 5px;
+            font-size: 90%;
+            transition: all .15s;
+        }
+
+        .CreateSectionCourse div:hover {
+            background: #62d1b8;
+        }
+
+        .CreateSectionCourse i {
+            font-size: 130%;
+            vertical-align: middle;
+            margin-left: 5px;
+            transition: all .15s;
+        }
+
+        .CreateSectionCourse:hover i {
+            transform: rotate(90deg);
+        }
+
+
+        .SectionCourse {
+            margin: 7px 12px;
+        }
+
+        .ContainerBtnItemCollapse {
+            background: #ecf8ff;
+            border-bottom: 1px solid #bcdadf;
+            color: #3975df;
+            padding: 10px;
+            border-radius: 7px;
+            text-align: center;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .CollapseBtn {
+            cursor: pointer;
+            width: 80%;
+            margin-left: 5px;
+            text-align: left;
+        }
+
+
+        .SectionCourseItem > div * {
+            display: inline-block;
+        }
+
+        .SectionCourseItem > div p {
+            margin: 0;
+            font-size: 90%;
+            margin-left: -3px;
+        }
+
+        .SectionCourseItem > div div:first-of-type {
+            margin-right: 32px;
+            padding-right: 25px;
+            border-right: 2px dashed #fdc1db;
+        }
+
+        .SectionCourseItem > div div:first-of-type i {
+            font-size: 100%;
+            cursor: default;
+        }
+
+        .SectionCourseItem i {
+            font-size: 110%;
+            padding: 5px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .SectionCourseItem i:hover {
+            font-weight: bold;
+        }
+
+        .CollapseBtn p {
+            margin: 0;
+        }
+
+        .CollapseContainer {
+            background: #fdf4f6;
+            border: 1px solid rgba(253, 139, 146, 0.2);
+            border-radius: 2px;
+        }
+
+        .Videos {
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .Video {
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 7px 10px;
+            border: 1px dashed rgba(154, 154, 154, 0.6);
+        }
+
+        .LinkVideo {
+            display: flex;
+            justify-content: space-between;
+            width: 92%;
+        }
+
+        .LinkVideo p {
+            display: inline-block;
+            margin: 0;
+            font-size: 95%;
+            color: #888888;
+        }
+
+        .LinkVideo .fa-clock {
+            animation: AnimationClockRotate 10s infinite;
+            color: #888888;
+        }
+
+        .LinkVideo .fa-hourglass {
+            color: #888888;
+        }
+
+        .LinkVideo > div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ContainerTimeDurationVideo {
+            width: 100px;
+            font-size: 95%;
+            margin-right: 5px;
+        }
+
+        .ContainerTimePastSubmitVideo {
+            width: 110px;
+            margin-left: 10px;
+            padding-left: 10px;
+            border-left: 2px dashed #cddafd;
+            font-size: 90%;
+            text-align: center;
+        }
+
+
+        .ItemVideo {
+            width: 6%;
+            padding-left: 10px;
+            border-left: 2px dashed #cddafd;
+            text-align: center;
+        }
+
+        .ItemVideo i {
+            padding: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .ItemVideo i:hover {
+            font-weight: bold;
+        }
+
+        .ContainerAddVideoInSection {
+            text-align: right;
+            direction: rtl;
+        }
+
+        .ContainerAddVideoInSection div {
+            cursor: pointer;
+            background: #63dcc3;
+            color: #ffffff;
+            width: 120px;
+            text-align: center;
+            margin: 5px;
+            padding: 7px 5px;
+            border-radius: 3px;
+        }
+
+        .ContainerAddVideoInSection p {
+            margin: 0;
+        }
+
+        .TextAddVideoInSection {
+            font-size: 90%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            height: 15px;
+            text-align: left;
+            margin: 30px 0 15px 33px;
+        }
+
+        .ContainerAddVideoInSection div:hover {
+            background: #63d7be;
+        }
+
+        .ContainerAddVideoInSection div:hover i {
+            font-weight: bold;
+        }
+
+
+        .ContainerFormCreateSectionCourse {
+            width: 100%;
+        }
+
+        .ContainerFormCreateSectionCourse .ItemFormInput {
+            background: #ffffff;
+        }
+
+        .ContainerButtonForm {
+            text-align: right;
+        }
+
+        .ContainerButtonForm button {
+            margin: 5px 10px;
+        }
+
+
+        .ContainerUploadingVideoMessage > div {
+            margin: 20px 0;
+            background: #fffac1;
+            border: 1px solid #ffd865;
+            color: #8e8c02;
+            display: flex;
+            justify-content: space-between;
+            padding: 7px 10px;
+            border-radius: 4px;
+        }
+
+        .ContainerUploadingVideoMessage p {
+            margin: 0;
+            display: inline-block;
+        }
+
+        .TextPleaseWait {
+            font-size: 105%;
+        }
+
+
+        .ContainerUploadingVideoMessage i {
+            font-size: 140%;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+
+
+        .ContainerUploadingVideoMessage img {
+            width: 350px;
+            height: 200px;
+            display: block;
+            margin: auto;
+            position: relative;
+            border-radius: 50% / 10%;
+            color: white;
+            text-align: center;
+            text-indent: .1em;
+        }
+
+        .ContainerUploadingVideoMessage img:before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            bottom: 10%;
+            right: -5%;
+            left: -5%;
+            background: inherit;
+            border-radius: 5% / 50%;
+        }
+
+
+        .ContainerEditCourse {
+            padding: 5px;
+            top: 3%;
+        }
+
+        .ContainerEditCourse .ItemFormInput {
+            background: #f7f7f7;
+        }
+
+        .ContainerImageFormSubmitCourse {
+            direction: rtl;
+            margin: 10px auto;
+            width: 80%;
+        }
+
+        #ImageForSubmitCourse {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            border: 1px solid #eeeeee;
+            display: block;
+        }
+
+        .PriceSubmitCourse {
+            font-size: 85%;
+            color: #666666;
+            width: 80%;
+            margin: 10px auto;
+            text-align: left;
+        }
+
+        .PriceSubmitCourse p {
+            display: inline-block;
+            direction: ltr;
+        }
+
+
+        .ContainerPriceAddDiscount {
+            margin: 15px auto;
+            padding: 10px;
+            background: #fdf4f7;
+            border: #fdbce6 1px dashed;
+            text-align: left;
+            width: 90%;
+            border-radius: 5px;
+        }
+
+        .ContainerPriceAddDiscount .Label {
+            width: 90px;
+        }
+
+        .ContainerPriceAddDiscount p {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .PriceWithoutDiscount {
+            text-decoration: line-through;
+            font-size: 93%;
+        }
+
+        .PriceWithDiscount {
+            font-weight: bold;
+            font-size: 105%;
+        }
+
+        .ContainerDiscountInfo {
+            background: rgba(254, 231, 255, 0.61);
+            display: inline-block;
+            margin: 0 10px;
+            width: 250px;
+            padding: 5px;
+            padding-bottom: 0;
+            border-radius: 4px;
+            border: 1px dashed #ff625d;
+        }
+
+        .ContainerDiscountInfo p {
+            margin: 0;
+        }
+
+        .ContainerDiscountInfo > div > p {
+            font-size: 75%;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #bbbbbb;
+            color: #666666;
+        }
+
+        .ContainerDiscountInfo > div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        .ContainerDiscountInfo > div > div span {
+            vertical-align: middle;
+            font-size: 85%;
+            color: #555555;
+        }
+
+        .ContainerDiscountInfo > div > div i {
+            vertical-align: middle;
+            animation: AnimationClockRotate 10s infinite;
+        }
+
+        .ContainerDiscountInfo .fa-trash {
+            font-size: 85%;
+            color: rgb(255, 67, 77);
+            cursor: pointer;
+        }
+
+        .ContainerDiscountInfo .badge-success {
+            background: white;
+            color: #0da37f;
+            border: 1px solid rgba(13, 163, 127, 0.3);
+
+            margin-top: 3px;
+        }
+
+
+        @keyframes AnimationClockRotate {
+            0% {
+                transform: rotate(0);
+            }
+            40% {
+                transform: rotate(360deg);
+            }
+            40.1% {
+                transform: rotate(0);
+            }
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block Content %}
+    <input type="hidden" id="InfoCourse" IdCourse="{{ Course.id }}" Price="{{ Course.Price }}">
+    <div class="Course">
+        <div class="InfoCourse">
+            <div class="ContainerTitle">
+                <p>Information Course</p>
+            </div>
+            <div class="ContainerItemInfo">
+                <div class="ItemInfo">
+                    <p class="Label">Title Course</p>
+                    <p class="ResultField">{{ Course.Title }}</p>
+                </div>
+                <div class="ItemInfo">
+                    <p class="Label">Prerequisites</p>
+                    <p class="ResultField">{{ Course.PreRequisites }}</p>
+                </div>
+                <div class="ItemInfo">
+                    <p class="Label">References</p>
+                    <p class="ResultField">{{ Course.References }}</p>
+                </div>
+                <div class="ItemInfo">
+                    <p class="Label">Time Start</p>
+                    <p class="ResultField">{{ Course.DateTimeSubmit }}(<span
+                            class="text-info">{{ Course.TimePastSubmit }}</span>)</p>
+                </div>
+                <div class="ItemInfo">
+                    <p class="Label">Last Time Updated</p>
+                    <p class="ResultField">{{ Course.LastTimeUpdated|NoneVal:'' }}(<span
+                            class="text-info">{{ Course.TimePastUpdated }}</span>)
+                    </p>
+                </div>
+                <div class="ItemInfo">
+                    <p class="Label">Price</p>
+                    {% if Course.CourseIsFree %}
+                        <span>
+                            <p class="ResultField ltr bold text-success">Free</p>
+                    {% else %}
+                        {% if Course.HasDiscount %}
+                            <span class="TextDLineThroughRed Small mr-2">
+                            $
+                            <p class="ResultField ltr bold"
+                               Number="{{ Course.Price }}">{{ Course.Price }}</p>
+                        </span>
+                            <span class="bold">$
+                            <p class="ResultField ltr bold"
+                               Number="{{ Course.GetPrice }}">{{ Course.GetPrice }}</p>
+                        </span>
+                        {% else %}
+                            <span class="bold">$
+                            <p class="ResultField ltr bold"
+                               Number="{{ Course.GetPrice }}">{{ Course.GetPrice }}</p>
+                        </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="ItemInfo">
+                    <p class="Label">Description</p>
+                    <p class="ResultField">{{ Course.Description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="ImageCourseAndEdit">
+            <div class="badge StateCourse {% if Course.StateCourse == 'Active' %}badge-info{% elif Course.StateCourse == 'Pause' %}badge-warning{% else %}badge-success{% endif %}">
+                {{ Course.StateCourse }}
+            </div>
+            {% if Course.HasDiscount %}
+                <div class="ContainerDiscountInfo">
+                    <div>
+                        <i class="far fa-trash" ClickFunc="DeleteDiscount()"></i>
+                        <p>{{ Course.GetDiscount.Title }}</p>
+                    </div>
+                    <div>
+                        <div>
+                            <i class="far fa-clock"></i>
+                            <span TimerCounterDown ToDateTimer="{{ Course.GetDiscount.TimeExpired }}"></span>
+                        </div>
+                        <p class="badge badge-success">{{ Course.GetDiscount.Percent }}%</p>
+                    </div>
+                </div>
+            {% endif %}
+            {% if Course.HasDiscount %}
+                <i class="fas fa-percent ItemCourse" Percent title="Delete Discount" ClickFunc="DeleteDiscount()"></i>
+            {% else %}
+                <i class="far fa-percent ItemCourse" Percent title="Add Discount" ClickFunc="AddDiscountCourse()"></i>
+            {% endif %}
+            <i class="far fa-pen ItemCourse" Edit title="Edit Course" ClickFunc="ChangeInfoCourse()"></i>
+            <i class="far fa-trash ItemCourse" Trash title="Delete Course" ClickFunc="DeleteCourse()"></i>
+            <img src="{{ Course.Image.url }}" alt="{{ Course.Title }}" title="{{ Course.Title }}">
+        </div>
+    </div>
+    <div class="SectionVid">
+        <div class="ContainerTitle">
+            <p>Section & Videos</p>
+        </div>
+        <div class="ContainerUploadingVideoMessage d-none">
+            <div>
+                <p class="TextPleaseWait">Please wait</p>
+                <div>
+                    <p class="TextUploading">Uploading
+                        <i class="far fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </div>
+        {% for Section in Course.GetSections %}
+            <div class="SectionCourse">
+                <div class="ContainerBtnItemCollapse">
+                    <div class="CollapseBtn" data-toggle="collapse" data-target="#SectionID_{{ Section.id }}">
+                        <p>{{ Section.Title }}</p>
+                    </div>
+                    <div class="SectionCourseItem" SectionID="{{ Section.id }}" TitlePast="{{ Section.Title }}">
+                        <div>
+                            <div>
+                                <i class="fas fa-video"></i>
+                                <p>{{ Section.LenVideos }}</p>
+                            </div>
+                            <div>
+                                <i class="far fa-pen" Edit></i>
+                                <i class="far fa-trash" Trash></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="SectionID_{{ Section.id }}" class="collapse CollapseContainer">
+                    <div class="Videos">
+                        {% if Section.GetVideos|ListIsNone %}
+                            <div class="text-center">
+                                <p class="bold text-danger">No Video</p>
+                            </div>
+                        {% endif %}
+                        {% for Video in Section.GetVideos %}
+                            <div class="Video">
+                                <div class="LinkVideo">
+                                    {% if Video.StateVideo == '200' %}
+                                        <a href="{{ Video.Video.url }}" target="_blank">Video</a>
+                                    {% else %}
+                                        <p class="text-danger">There was a Problem Uploading</p>
+                                    {% endif %}
+                                    <div>
+                                        <div class="ContainerTimeDurationVideo">
+                                            <i class="far fa-hourglass"></i>
+                                            <p>{{ Video.GetDurationVideo }}</p>
+                                        </div>
+                                        <div class="ContainerTimePastSubmitVideo">
+                                            <i class="far fa-clock"></i>
+                                            <p>{{ Video.GetTimePastSubmit }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ItemVideo" VideoID="{{ Video.id }}" SectionID="{{ Section.id }}">
+                                    <i class="far fa-pen" Edit
+                                       TextChangeVideo="Change Video <b>{{ forloop.counter }}</b> in <b>{{ Section.Title }}</b>"
+                                       LinkVideoPast="{{ Video.Video.url }}"></i>
+                                    <i class="far fa-trash" Trash></i>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="ContainerAddVideoInSection">
+                        <div onclick="AddVideoCourse('{{ Section.id }}','{{ Section.Title }}')">
+                            Add Video
+                            <i class="far fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="CreateSectionCourse" ClickFunc="CreateSectionCourse()">
+            <div>
+                Create Section
+                <i class="far fa-plus"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="ContainerEditCourse ContainerBlur d-none" Size="Small" id="ContainerEditCourse">
+        <div class="ContainerTitle">
+            <p>Edit Course</p>
+        </div>
+        <form action="/t/Panel/{{ Course.id }}/EditCourse" method="post" enctype="multipart/form-data" content="UTF-8"
+              id="FormSubmitCourse">
+            {% csrf_token %}
+            <div class="ItemForm">
+                <p class="LabelInput">
+                    Title Course :
+                </p>
+                <div class="ItemFormInput">
+                    <input type="text" placeholder="JavaScript Course" name="TitleCourse" InputForm
+                           InputFormSubmitCourse Bigger="3" Less="200"
+                           SetIn="Container" value="{{ Course.Title|NoneVal:'' }}" CheckInputVal>
+                </div>
+            </div>
+            <div class="ItemForm">
+                <p class="LabelInput">
+                    PreRequisites :
+                </p>
+                <div class="ItemFormInput">
+                    <input type="text" placeholder="Html & Css" name="PreRequisites" InputForm
+                           InputFormSubmitCourse Bigger="0"
+                           Less="200" SetIn="Container" value="{{ Course.PreRequisites|NoneVal:'' }}" CheckInputVal>
+                </div>
+            </div>
+            <div class="ItemForm">
+                <p class="LabelInput">
+                    References <span class="text-danger">(Please split with <b>" , "</b> )</span> :
+                </p>
+                <div class="ItemFormInput">
+                    <input type="text" placeholder="For Example : w3school.com , JavaScript.com "
+                           name="References" InputForm InputFormSubmitCourse Bigger="0" Less="1000"
+                           SetIn="Container" value="{{ Course.References|NoneVal:'' }}" CheckInputVal>
+                </div>
+            </div>
+            <div class="ItemForm">
+                <p class="LabelInput">
+                    Picture :
+                </p>
+                <div class="ItemFormInput">
+                    <input type="file" name="Image" InputForm InputFormSubmitCourse
+                           SetIn="Container" IdImageTag="ImageForSubmitCourse" CheckInputVal TypeVal="File">
+                    <input type="hidden" name="StateImage" value="Geted">
+                </div>
+                <div class="ContainerImageFormSubmitCourse">
+                    <img src="{{ Course.Image.url }}" id="ImageForSubmitCourse" alt="{{ Course.Title }}">
+                </div>
+            </div>
+            <div class="ItemForm">
+                <p class="LabelInput">
+                    Price :
+                </p>
+                <div class="ItemFormInput">
+                    <input type="number" placeholder="0" name="Price" InputForm InputFormSubmitCourse
+                           InputPriceFormSubmitCourse Bigger="0" Less="15"
+                           SetIn="Container" TypeVal="Number" value="{{ Course.Price|NoneVal:'' }}" CheckInputVal>
+                </div>
+                <div class="PriceSubmitCourse">
+                    $
+                    <p id="PriceSubmitCourse" class="SplitNumber" Number="{{ Course.Price|NoneVal:'' }}"></p>
+                </div>
+            </div>
+            <div class="ItemForm">
+                <p class="LabelInput">Description :</p>
+                <div class="ItemFormInput">
+                                        <textarea name="Description"
+                                                  placeholder="This course is a great start for beginners"
+                                                  rows="6" type="text" InputForm InputFormSubmitCourse SetIn="Container"
+                                                  TypeVal="Text" Bigger="3" Less="5000"
+                                                  CheckInputVal>{{ Course.Description|NoneVal:'' }}</textarea>
+                </div>
+            </div>
+            <div class="ItemForm">
+                <p class="LabelInput">State Course :</p>
+                <div class="ItemFormInput">
+                    <select selected="selected" name="StateCourse" Valid="true" class="InputValid"
+                            InputFormSubmitCourse>
+                        <option>Active</option>
+                        <option>Pause</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ContainerButtonForm">
+                <button class="BtnStyleNone" type="button" onclick="document.body.click()">Close</button>
+                <button class="BtnStyle_5 Disabled" type="button" id="ButtonFormSubmitCourse">Submit
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="timer"></div>
+
+
+{% endblock %}
+
+{% block Js %}
+    <script>
+        SplitPrice()
+        GetCookieFunctionality_ShowNotification()
+
+
+        function AddDiscountCourse() {
+            let Container = CreateContainerBlur('Default', null, null, 'Small')
+            ClickOutSideContainer(Container, function () {
+                DeleteContainerBlur()
+            })
+
+            let InfoCourse = document.querySelector('#InfoCourse')
+            let IdCourse = InfoCourse.getAttribute('IdCourse')
+            let PriceCourse = InfoCourse.getAttribute('Price')
+            let Node = `<div class="ContainerFormAddDiscount">
+                <div class="ContainerTitle">
+                    <p>Add Discount</p>
+                </div>
+                <div class="ItemForm">
+                    <p class="LabelInput">
+                        Title (Optional) :
+                    </p>
+                    <div class="ItemFormInput InputValid">
+                        <input type="text" min="0" max="99" TypeVal="Text" Valid="true"  InputTitleDiscount>
+                    </div>
+                </div>
+                <div class="ItemForm">
+                    <p class="LabelInput">
+                        Percent :
+                    </p>
+                    <div class="ItemFormInput">
+                        <input type="number" min="0" max="99" TypeVal="Number"  value="0" TypeInp="Percent"  InputForm Bigger="0" Less="3" SetIn="Container" InputFormAddDiscount InputPercentDiscount>
+                    </div>
+                </div>
+                <div class="ItemForm">
+                    <p class="LabelInput">
+                        Time (hour):
+                    </p>
+                    <div class="ItemFormInput">
+                        <input type="number" InputForm Bigger="0" Less="10" TypeVal="Number" value="0" SetIn="Container" InputFormAddDiscount InputTimeDiscount>
+                    </div>
+                </div>
+                <div class="ContainerPriceAddDiscount">
+                  <p class="Label">Price Course</p>
+                  <p class="PriceWithDiscount" PriceSet>$ ${PriceCourse}</p>
+                  <p class="PriceWithoutDiscount" >$ ${PriceCourse}</p>
+                  <div class="float-right badge badge-info" PercentSet>0%</div>
+                </div>
+                <div class="ContainerButtonForm">
+                    <button onclick="document.body.click()" class="BtnStyleNone">Close</button>
+                    <button class="BtnStyle_5 Disabled" id="BtnAddDiscount">Add</button>
+                </div>
+            </div>
+            `
+            Container.innerHTML = Node
+            let InputFormAddDiscount = document.querySelectorAll('[InputFormAddDiscount]')
+            let PriceSet = document.querySelector('[PriceSet]')
+            let PercentSet = document.querySelector('[PercentSet]')
+            let BtnAddDiscount = document.querySelector('#BtnAddDiscount')
+            for (let Input of InputFormAddDiscount) {
+                Input.addEventListener('input', function () {
+                    let TypeInp = Input.getAttribute('TypeInp')
+                    if (TypeInp == 'Percent') {
+                        PriceCourse = parseInt(PriceCourse)
+                        let ValuePercent = Input.value
+                        PercentSet.innerHTML = ValuePercent + '%'
+                        PriceSet.innerHTML = `$ ${(PriceCourse - (PriceCourse / 100 * ValuePercent)).toFixed(2)}`
+                    }
+                    let Bigger = Input.getAttribute('Bigger')
+                    let Less = Input.getAttribute('Less')
+                    CheckInputValidations(Input, Bigger, Less, 'Container', 'Number')
+                    CheckValidInputsAddDiscount()
+                })
+            }
+
+            function CheckValidInputsAddDiscount() {
+                BtnAddDiscount.addEventListener('click', SubmitDiscount)
+                BtnAddDiscount.classList.remove('Disabled')
+                for (let Input of InputFormAddDiscount) {
+                    if (Input.value == 0) {
+                        Input.setAttribute('Valid', 'false')
+                        Input.parentNode.classList.remove('InputValid')
+                    }
+                    let Valid = Input.getAttribute('Valid') || 'false'
+                    if (Valid == 'false') {
+                        BtnAddDiscount.removeEventListener('click', SubmitDiscount)
+                        BtnAddDiscount.classList.add('Disabled')
+                    }
+                }
+            }
+
+            function SubmitDiscount() {
+                let Title = document.querySelector('[InputTitleDiscount]').value
+                let Percent = document.querySelector('[InputPercentDiscount]').value
+                let Time = document.querySelector('[InputTimeDiscount]').value
+                let Data = {
+                    'Title': Title,
+                    'Percent': Percent,
+                    'Time': Time
+                }
+                SendAjax(`/t/Panel/${IdCourse}/AddDiscount`, Data, 'POST', function (response) {
+                    let Status = response.Status
+                    DeleteContainerBlur()
+                    if (Status == '200') {
+                        SetCookieFunctionality_ShowNotification('Discount was Successfully Applied', 'Success', 6000, 2)
+                        location.reload()
+                    } else if (Status == '203') {
+                        ShowNotificationMessage('Please Enter The Values Correctly', 'Error')
+                    } else if (Status == '208') {
+                        ShowNotificationMessage('The Discount has Already been Applied', 'Warning')
+                    } else if (Status == '404') {
+                        ShowNotificationMessage('Can not Add Discount Please Try Again in a few Minute', 'Error')
+                    }
+                })
+            }
+
+        }
+
+
+        function DeleteDiscount() {
+            CreateMessage_Alert('Are You Sure You Want Remove Discount Course ?', function () {
+                let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                SendAjax(`/t/Panel/${IdCourse}/DeleteDiscount`, {}, 'POST', function (response) {
+                    let Status = response.Status
+                    if (Status == '200') {
+                        SetCookieFunctionality_ShowNotification('Discount Successfully Removed', 'Success', 6000, 2)
+                        location.reload()
+                    } else if (Status == '404') {
+                        ShowNotificationMessage('Can not Remove Discount Please Try Again in a few Minute', 'Error')
+                    }
+                })
+            })
+        }
+
+
+        function ChangeInfoCourse() {
+            let Container = document.querySelector('#ContainerEditCourse')
+            ClickOutSideContainer(Container, function () {
+                ClearEffectOnBody()
+                Container.classList.add('d-none')
+            })
+            Container.classList.remove('d-none')
+            document.body.classList.add('BlurAllElementsExceptContainerBlur')
+            ScrollOnElement(null, Container)
+        }
+
+
+        function CheckingStateBtnSubmitForm(IdButton, SelectorInputs) {
+            let AllInputFormInfo = document.querySelectorAll(`[${SelectorInputs}]`)
+            let BtnSubmit = document.querySelector(`#${IdButton}`)
+            BtnSubmit.classList.remove('Disabled')
+            BtnSubmit.type = 'submit'
+            for (let Input of AllInputFormInfo) {
+                let Valid = Input.getAttribute('Valid') || 'false'
+                if (Valid == 'false') {
+                    BtnSubmit.classList.add('Disabled')
+                    BtnSubmit.type = 'button'
+                }
+            }
+        }
+
+        let FormSubmitCourse = document.querySelector('#FormSubmitCourse')
+        FormSubmitCourse.addEventListener('input', function () {
+            setTimeout(function () {
+                CheckingStateBtnSubmitForm('ButtonFormSubmitCourse', 'InputFormSubmitCourse')
+            })
+        })
+
+
+        let InputPriceFormSubmitCourse = document.querySelector('[InputPriceFormSubmitCourse]')
+        InputPriceFormSubmitCourse.addEventListener('input', function () {
+            let ItemPriceFormSubmitCourse = document.querySelector('#PriceSubmitCourse')
+            ItemPriceFormSubmitCourse.setAttribute('Number', InputPriceFormSubmitCourse.value)
+            SplitPrice(ItemPriceFormSubmitCourse)
+        })
+
+
+        function AddVideoCourse(SectionID, AddVideoInSecText) {
+            let Container = CreateContainerBlur('Default', null, null, 'Small')
+
+            ClickOutSideContainer(Container, function () {
+                DeleteContainerBlur()
+            })
+            let Node = `
+
+                       <div class="ContainerFormAddVideo" id="ContainerFormAddVideo">
+                            <div class="ContainerTitle">
+                                <p>Add Video</p>
+                            </div>
+                            <div class="TextAddVideoInSection">
+                               Add Video in : <strong> ${AddVideoInSecText}</strong>
+                            </div>
+                            <div class="ItemForm">
+                                <p class="LabelInput">Video :</p>
+                                <div class="ItemFormInput">
+                                    <input type="file" name='Video' id="AddVideoInputFile" accept="video/mp4,video/x-m4v,video/*"  State="MostGet" InputForm
+                                           InputAddVideo>
+                                </div>
+                            </div>
+                            <div class="ContainerButtonForm">
+                                <button class="BtnStyleNone" onclick="document.body.click()">Close</button>
+                                <button class="BtnStyle_5 Disabled" id="BtnAddVideo">Add</button>
+                            </div>
+                        </div>
+
+                         <div class="ContainerUploadingVideoMessage d-none">
+                                <div>
+                                    <p class="TextPleaseWait">Please wait</p>
+                                    <div>
+                                        <p class="TextUploading">Uploading
+                                        <i class="far fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+                                <img src="/static/image/ImageDefault/GifUploadingVideo.gif" alt="Gif Video">
+                          </div>
+
+
+            `
+            Container.innerHTML = Node
+
+            let InputAddVideo = document.querySelector('#AddVideoInputFile')
+            let BtnAddVideo = document.querySelector('#BtnAddVideo')
+            InputAddVideo.addEventListener('change', function () {
+                let State = ValidationFile(InputAddVideo, 'Container')
+                if (State) {
+                    BtnAddVideo.classList.remove('Disabled')
+                    BtnAddVideo.addEventListener('click', UploadVideoAdded)
+                } else {
+                    BtnAddVideo.classList.add('Disabled')
+                    BtnAddVideo.removeAttribute('click', UploadVideoAdded)
+                }
+            })
+
+            function UploadVideoAdded() {
+                let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                let Form = document.createElement('form')
+                Form.appendChild(InputAddVideo)
+                let ContainerFormAddVideo = document.querySelector('#ContainerFormAddVideo')
+                let AllContainerUploadingVideoMessage = document.querySelectorAll('.ContainerUploadingVideoMessage')
+                for (let i of AllContainerUploadingVideoMessage) {
+                    i.classList.remove('d-none')
+                }
+                ContainerFormAddVideo.classList.add('d-none')
+                $.ajax({
+                    type: 'POST',
+                    url: `/t/Panel/Course/${IdCourse}/${SectionID}/AddVideo`,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    data: new FormData(Form),
+                    success: function (response) {
+                        if (response.Status == '200') {
+                            for (let i of AllContainerUploadingVideoMessage) {
+                                i.classList.add('d-none')
+                            }
+                            SetCookieFunctionality_ShowNotification('Video Uploaded Successfully', 'Success', 6000, 2)
+                            location.reload()
+                        }
+                    },
+                    failed: function (response) {
+                        ShowNotificationMessage('Can not Add Video Please Try again in a few Minutes', 'Error')
+                        DeleteContainerBlur()
+                    }
+                })
+
+            }
+        }
+
+
+        function DeleteCourse() {
+            CreateMessage_Alert('Do You Want to Delete Course ?', function () {
+                CreateMessage_Alert('Are You Sure You Want to Delete The Course ?', function () {
+                    ClickOutSideContainer(this,function () {
+                        CloseMessage_Alert()
+                    })
+                    let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                    SendAjax(`/t/Panel/${IdCourse}/DeleteCourse`, {}, 'POST', function (response) {
+                        if (response.Status == '200') {
+                            SetCookieFunctionality_ShowNotification('Course was Successfully Deleted', 'Success')
+                            location.href = '/t/Panel'
+                        }
+                        if (response.Status == '404') {
+                            ShowNotificationMessage('Can not Delete Course Please Try Again in a few Minute', 'Error')
+                        }
+                    })
+                })
+            })
+        }
+
+
+        let AllIconEditVideoCourse = document.querySelectorAll('.ItemVideo [Edit]')
+        for (let BtnEdit of AllIconEditVideoCourse) {
+            BtnEdit.addEventListener('click', function () {
+                let VideoID = BtnEdit.parentNode.getAttribute('VideoID')
+                let SectionID = BtnEdit.parentNode.getAttribute('SectionID')
+                let TextChangeVideo = BtnEdit.getAttribute('TextChangeVideo')
+                let LinkVideoPast = BtnEdit.getAttribute('LinkVideoPast')
+                if (VideoID != null && SectionID != null && TextChangeVideo != null) {
+                    ChangeVideoCourseContainer(VideoID, SectionID, TextChangeVideo, LinkVideoPast)
+                } else {
+                    ShowNotificationMessage('Problem in Changing Video', 'Error')
+                }
+            })
+        }
+
+        function ChangeVideoCourseContainer(VideoID, SectionID, TextChangeVideo, LinkVideoPast) {
+
+            let Container = CreateContainerBlur('Default', null, null, 'Small')
+            ClickOutSideContainer(Container, function () {
+                DeleteContainerBlur()
+            })
+
+            let Node = `
+                     <div class="ContainerFormAddVideo" id="ContainerFormAddVideo">
+                                    <div class="ContainerTitle">
+                                        <p>Change Video</p>
+                                    </div>
+                                    <div class="TextAddVideoInSection">
+                                       <strong><a href="${LinkVideoPast}" target="_blank">Video now</a></strong>
+                                       <br>
+                                       <p>${TextChangeVideo}</p>
+                                    </div>
+                                    <div class="ItemForm">
+                                        <p class="LabelInput">New Video :</p>
+                                        <div class="ItemFormInput">
+                                            <input type="file" name='Video' id="AddVideoInputFile" accept="video/mp4,video/x-m4v,video/*"  State="MostGet" InputForm
+                                                   InputAddVideo>
+                                        </div>
+                                    </div>
+                                    <div class="ContainerButtonForm">
+                                        <button class="BtnStyleNone" onclick="document.body.click()">Close</button>
+                                        <button class="BtnStyle_5 Disabled" id="BtnAddVideo">Add</button>
+                                    </div>
+                                </div>
+
+                                 <div class="ContainerUploadingVideoMessage d-none">
+                                        <div>
+                                            <p class="TextPleaseWait">Please wait</p>
+                                            <div>
+                                                <p class="TextUploading">Uploading
+                                                <i class="far fa-spinner fa-spin"></i>
+                                            </div>
+                                        </div>
+                                        <img src="/static/image/ImageDefault/GifUploadingVideo.gif" alt="Gif Video">
+                     </div>
+                    `
+            Container.innerHTML = Node
+            let InputAddVideo = document.querySelector('#AddVideoInputFile')
+            let BtnAddVideo = document.querySelector('#BtnAddVideo')
+            InputAddVideo.addEventListener('change', function () {
+                let State = ValidationFile(InputAddVideo, 'Container')
+                if (State) {
+                    BtnAddVideo.classList.remove('Disabled')
+                    BtnAddVideo.addEventListener('click', UploadVideoAdded)
+                } else {
+                    BtnAddVideo.classList.add('Disabled')
+                    BtnAddVideo.removeAttribute('click', UploadVideoAdded)
+                }
+            })
+
+            function UploadVideoAdded() {
+                let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                let Form = document.createElement('form')
+                Form.appendChild(InputAddVideo)
+                let ContainerFormAddVideo = document.querySelector('#ContainerFormAddVideo')
+                let AllContainerUploadingVideoMessage = document.querySelectorAll('.ContainerUploadingVideoMessage')
+                for (let i of AllContainerUploadingVideoMessage) {
+                    i.classList.remove('d-none')
+                }
+                ContainerFormAddVideo.classList.add('d-none')
+                $.ajax({
+                    type: 'POST',
+                    url: `/t/Panel/Course/${IdCourse}/${SectionID}/${VideoID}/ChangeVideo`,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    data: new FormData(Form),
+                    success: function (response) {
+                        if (response.Status == '200') {
+                            for (let i of AllContainerUploadingVideoMessage) {
+                                i.classList.add('d-none')
+                            }
+                            SetCookieFunctionality_ShowNotification('Video uploaded successfully', 'Success', 6000, 2)
+                            location.reload()
+                        }
+                    },
+                    failed: function (response) {
+                        ShowNotificationMessage('Can not Add Video Please Try again in a few Minutes', 'Error')
+                        document.body.click() // Close Container Blur
+                    }
+                })
+
+            }
+        }
+
+        let AllBtnDeleteVideo = document.querySelectorAll('.ItemVideo [Trash]')
+        for (let BtnDelete of AllBtnDeleteVideo) {
+            BtnDelete.addEventListener('click', function () {
+                CreateMessage_Alert('Are You Sure you Want Delete Video ? ', function () {
+                    let CourseID = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                    let SectionID = BtnDelete.parentNode.getAttribute('SectionID')
+                    let VideoID = BtnDelete.parentNode.getAttribute('VideoID')
+                    SendAjax(`/t/Panel/Course/${CourseID}/${SectionID}/${VideoID}/DeleteVideo`, {}, 'POST', function (response) {
+                        if (response.Status == '200') {
+                            SetCookieFunctionality_ShowNotification('Your Video has been Successfully Deleted', 'Success', 6000, 2)
+                            location.reload()
+                        }
+                    })
+                })
+            })
+        }
+
+
+        function CreateSectionCourse() {
+            let Container = CreateContainerBlur('Default', null, null, 'Small')
+            ClickOutSideContainer(Container, function () {
+                DeleteContainerBlur()
+            })
+
+            let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+            let Node = `
+              <div class="ContainerFormCreateSectionCourse">
+                    <div class="ContainerTitle">
+                        <p>Create Section Course</p>
+                    </div>
+                    <form action="/t/Panel/Course/${IdCourse}/CreateSectionCourse" method="post" content="UTF-8" id="FormCreateSectionCourse">
+                        <div class="ItemForm">
+                            <p class="LabelInput">Title Section :</p>
+                            <div class="ItemFormInput">
+                                <input type="text" name="Title" InputForm Bigger="0" Less="150" SetIn="Container" InputTitleSectionCourse>
+                            </div>
+                        </div>
+                        <div class="ContainerButtonForm">
+                            <button class="BtnStyleNone" type="button" onclick="document.body.click()">Close</button>
+                            <button class="BtnStyle_5 Disabled" id="BtnCreateSectionCourse" type="button">Create</button>
+                        </div>
+                    </form>
+                </div>
+            `
+            Container.innerHTML = Node
+
+            let FormCreateSectionCourse = document.querySelector('#FormCreateSectionCourse')
+            FormCreateSectionCourse.onsubmit = function () {
+                location.reload()
+            }
+
+            let InputTitle = document.querySelector('[InputTitleSectionCourse]')
+            InputTitle.addEventListener('input', CheckStateInputTitleSectionCourse)
+
+            function CheckStateInputTitleSectionCourse() {
+                let Bigger = InputTitle.getAttribute('Bigger')
+                let Less = InputTitle.getAttribute('Less')
+                let SetIn = InputTitle.getAttribute('SetIn')
+                CheckInputValidations(InputTitle, Bigger, Less, SetIn)
+                let BtnCreate = document.querySelector('#BtnCreateSectionCourse')
+                let Valid = InputTitle.getAttribute('Valid') || 'false'
+                if (Valid == 'true') {
+                    BtnCreate.type = 'submit'
+                    BtnCreate.classList.remove('Disabled')
+                } else {
+                    BtnCreate.type = 'button'
+                    BtnCreate.classList.add('Disabled')
+                }
+            }
+        }
+
+        let AllBtnChangeSection = document.querySelectorAll('.SectionCourseItem [Edit]')
+        for (let BtnEdit of AllBtnChangeSection) {
+            BtnEdit.addEventListener('click', function () {
+                let Container = CreateContainerBlur('Default', null, null, 'Small')
+                ClickOutSideContainer(Container, function () {
+                    DeleteContainerBlur()
+                })
+                let PastTitle = BtnEdit.parentNode.parentNode.parentNode.getAttribute('TitlePast')
+                let SectionID = BtnEdit.parentNode.parentNode.parentNode.getAttribute('SectionID')
+                let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                let Node = `
+                    <div class="ContainerFormCreateSectionCourse">
+                        <div class="ContainerTitle">
+                            <p>Change Title Section Course</p>
+                        </div>
+                        <form action="/t/Panel/Course/${IdCourse}/${SectionID}/ChangeSection" method="post" content="UTF-8" id="FormCreateSectionCourse">
+                            <div class="ItemForm">
+                                <p class="LabelInput small">Title now : ${PastTitle}</p>
+                                <p class="LabelInput">New Title Section :</p>
+                                <div class="ItemFormInput">
+                                    <input type="text" name="Title" InputForm Bigger="0" Less="150" SetIn="Container" InputTitleSectionCourse>
+                                </div>
+                            </div>
+                            <div class="ContainerButtonForm">
+                                <button class="BtnStyleNone" type="button" onclick="document.body.click()">Close</button>
+                                <button class="BtnStyle_5 Disabled" id="BtnCreateSectionCourse" type="button">Change</button>
+                            </div>
+                        </form>
+                    </div>
+                `
+                Container.innerHTML = Node
+                let FormCreateSectionCourse = document.querySelector('#FormCreateSectionCourse')
+                FormCreateSectionCourse.onsubmit = function () {
+                    location.reload()
+                }
+
+                let InputTitle = document.querySelector('[InputTitleSectionCourse]')
+                InputTitle.addEventListener('input', CheckStateInputTitleSectionCourse)
+
+                function CheckStateInputTitleSectionCourse() {
+                    let Bigger = InputTitle.getAttribute('Bigger')
+                    let Less = InputTitle.getAttribute('Less')
+                    let SetIn = InputTitle.getAttribute('SetIn')
+                    CheckInputValidations(InputTitle, Bigger, Less, SetIn)
+                    let BtnCreate = document.querySelector('#BtnCreateSectionCourse')
+                    let Valid = InputTitle.getAttribute('Valid') || 'false'
+                    if (Valid == 'true') {
+                        BtnCreate.type = 'submit'
+                        BtnCreate.classList.remove('Disabled')
+                    } else {
+                        BtnCreate.type = 'button'
+                        BtnCreate.classList.add('Disabled')
+                    }
+                }
+
+            })
+        }
+
+        let AllBtnDeleteSection = document.querySelectorAll('.SectionCourseItem [Trash]')
+        for (let BtnDelete of AllBtnDeleteSection) {
+            BtnDelete.addEventListener('click', function () {
+                CreateMessage_Alert('Are You Sure you Want to Delete your Section ?', function () {
+                    let SectionID = BtnDelete.parentNode.parentNode.parentNode.getAttribute('SectionID')
+                    let IdCourse = document.querySelector('#InfoCourse').getAttribute('IdCourse')
+                    SendAjax(`/t/Panel/Course/${IdCourse}/${SectionID}/DeleteSection`, {}, 'POST', function (response) {
+                        let Status = response.Status
+                        if (Status == '200') {
+                            SetCookieFunctionality_ShowNotification('Section was Successfully Deleted', 'Success', 6000, 2)
+                            location.reload()
+                        } else if (Status == '404') {
+                            ShowNotificationMessage('Difficulty Finding Sections', 'Error')
+                        } else {
+                            location.href = '/'
+                        }
+                    })
+                })
+            })
+        }
+    </script>
+{% endblock %}
